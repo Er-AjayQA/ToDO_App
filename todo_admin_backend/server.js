@@ -17,6 +17,12 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes Imports
+const userRoutes = require("./api/UserManagement/Router/user.router");
+
+// Routes Middleware
+app.use("/api/v1/admin/users", userRoutes);
+
 // Listening to Server
 app.listen(PORT, (err) => {
   try {
