@@ -2,27 +2,29 @@
 const mongoose = require("mongoose");
 
 // User Schema
-const userSchema = new mongoose.Schema(
+const projectsSchema = new mongoose.Schema(
   {
-    username: {
+    name: {
       type: String,
       required: true,
     },
-    email: {
+    description: {
       type: String,
       required: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
-    assignedProjects: {
+    users: {
       type: Array,
-      ref: "project",
+      required: true,
+      ref: "user",
     },
-    activeProject: {
+    createdBy: {
       type: String,
-      ref: "project",
+      required: true,
+      ref: "user",
+    },
+    tasks: {
+      type: Array,
+      ref: "task",
     },
     isDeleted: {
       type: Boolean,
@@ -32,4 +34,4 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("project", projectsSchema);
