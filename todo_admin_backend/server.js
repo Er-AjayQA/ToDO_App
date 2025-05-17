@@ -19,9 +19,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes Imports
 const userRoutes = require("./api/UserManagement/Router/user.router");
+const projectRoutes = require("./api/Masters/Projects/Router/projects.router");
 
 // Routes Middleware
 app.use("/api/v1/admin/users", userRoutes);
+app.use("/api/v1/admin/projects", projectRoutes);
 
 // Listening to Server
 app.listen(PORT, (err) => {
