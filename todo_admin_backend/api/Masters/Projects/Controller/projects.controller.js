@@ -38,18 +38,23 @@ exports.create = async (req, res) => {
 // Get All Project Controller
 exports.getAll = async (req, res) => {
   const filter = {};
+  let limit = req?.body?.limit || 10;
+  let sort = req?.body?.sort || "asc";
 
   try {
-    const getAllProjects = await ProjectModel.find().populate([
-      {
-        path: "users",
-        select: ["username", "email"],
-      },
-      {
-        path: "createdBy",
-        select: ["username", "email"],
-      },
-    ]);
+    const getAllProjects = await ProjectModel.find()
+      .populate([
+        {
+          path: "users",
+          select: ["username", "email"],
+        },
+        {
+          path: "createdBy",
+          select: ["username", "email"],
+        },
+      ])
+      .limit(limit)
+      .sort({ _id: sort });
 
     if (getAllProjects.length <= 0) {
       return res.status(201).json({
@@ -60,6 +65,7 @@ exports.getAll = async (req, res) => {
       return res.status(201).json({
         success: true,
         message: "Data fetched successfully!!",
+        records: getAllProjects.length,
         data: getAllProjects,
       });
     }
