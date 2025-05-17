@@ -37,12 +37,20 @@ exports.create = async (req, res) => {
 
 // Get All Project Controller
 exports.getAll = async (req, res) => {
-  const filter = {};
-  let limit = req?.body?.limit || 10;
+  const data = req.body;
+  const filter = { isDeleted: false };
+  let limit = parseInt(req?.body?.limit) || 10;
   let sort = req?.body?.sort || "asc";
 
+  if (limit < 1) limit = 10;
+
+  if (data.name != "" && data.name != undefined) {
+    var nameRegex = new RegExp(data.name, "i");
+    filter.name = nameRegex;
+  }
+
   try {
-    const getAllProjects = await ProjectModel.find()
+    const getAllProjects = await ProjectModel.find(filter)
       .populate([
         {
           path: "users",
