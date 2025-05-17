@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
       type: Array,
       ref: "project",
     },
-    activeProject: {
+    currentActiveProject: {
       type: String,
       ref: "project",
     },
