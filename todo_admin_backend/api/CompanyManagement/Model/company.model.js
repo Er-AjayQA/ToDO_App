@@ -2,13 +2,9 @@
 const mongoose = require("mongoose");
 
 // User Schema
-const userSchema = new mongoose.Schema(
+const companySchema = new mongoose.Schema(
   {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
+    company_name: {
       type: String,
       required: true,
     },
@@ -16,17 +12,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    password: {
+    registerUrl: {
       type: String,
-      required: true,
     },
-    registeredCompanies: {
-      type: Array,
-      required: true,
-    },
-    myProjects: {
+    allProjects: {
       type: Array,
       ref: "project",
+      default: [],
+    },
+    allUsers: {
+      type: Array,
+      ref: "user",
+      default: [],
     },
     isDeleted: {
       type: Boolean,
@@ -36,4 +33,4 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("company", companySchema);

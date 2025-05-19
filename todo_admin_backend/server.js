@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes Imports
+const companyRoutes = require("./api/CompanyManagement/Router/company.router");
 const userRoutes = require("./api/UserManagement/Router/user.router");
 const tagRoutes = require("./api/Masters/Tags/Router/tags.router");
 const priorityRoutes = require("./api/Masters/Priority/Router/priority.router");
@@ -26,6 +27,7 @@ const projectRoutes = require("./api/ProjectManagement/Projects/Router/projects.
 const taskRoutes = require("./api/ProjectManagement/Projects/Router/projects.router");
 
 // Routes Middleware
+app.use("/api/v1/admin/company", companyRoutes);
 app.use("/api/v1/admin/users", userRoutes);
 app.use("/api/v1/admin/tags", tagRoutes);
 app.use("/api/v1/admin/priorities", priorityRoutes);
