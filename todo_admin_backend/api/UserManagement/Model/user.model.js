@@ -4,11 +4,7 @@ const mongoose = require("mongoose");
 // User Schema
 const userSchema = new mongoose.Schema(
   {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    lastName: {
+    username: {
       type: String,
       required: true,
     },
@@ -20,13 +16,23 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    registeredCompanies: {
-      type: Array,
-      required: true,
+    role: {
+      type: String,
+      enum: ["admin", "manager", "user"],
+      default: "user",
+    },
+    company_details: {
+      type: String,
+      default: {},
+      ref: "company",
     },
     myProjects: {
       type: Array,
       ref: "project",
+    },
+    myTasks: {
+      type: Array,
+      ref: "task",
     },
     isDeleted: {
       type: Boolean,

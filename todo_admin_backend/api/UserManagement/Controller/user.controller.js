@@ -3,15 +3,16 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const UserModel = require("../Model/user.model");
-const ProjectModel = require("../../ProjectManagement/Projects/Model/projects.model");
 const salt = 10;
 
 // User Register Controller
 exports.register = async (req, res) => {
   const data = req.body;
+  const companyId = req.params.companyId;
   try {
     let isUserAlreadyExist = await UserModel.findOne({
-      email: data.username,
+      username: data.username,
+      email: data.email,
       isDeleted: false,
     });
 
@@ -24,25 +25,11 @@ exports.register = async (req, res) => {
 
     let hashedPassword = await bcrypt.hash(data.password, salt);
 
-    let allProjects;
-
-    if (data.role === "superadmin") {
-      let allExistingProjects = await ProjectModel.find({ isDeleted: false });
-
-      if (allExistingProjects.length >= 1) {
-        allProjects.map((project) => project._id);
-      } else {
-        allProjects = [];
-      }
-    } else {
-      allProjects = [];
-    }
-
-    const registerUser = await UserModel.create({
+    const registerUser = await UserModel({
       ...data,
       password: hashedPassword,
-      myProjects: allProjects,
-    }).save;
+      company_details: companyId,
+    }).save();
 
     return res.status(201).json({
       success: true,

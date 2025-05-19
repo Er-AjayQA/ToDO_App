@@ -15,6 +15,10 @@ const companySchema = new mongoose.Schema(
     registerUrl: {
       type: String,
     },
+    role: {
+      type: String,
+      enum: ["admin", "manager", "none"],
+    },
     allProjects: {
       type: Array,
       ref: "project",
@@ -24,6 +28,16 @@ const companySchema = new mongoose.Schema(
       type: Array,
       ref: "user",
       default: [],
+    },
+    otp: {
+      type: Number,
+    },
+    otpExpiry: {
+      type: String,
+    },
+    isActive: {
+      type: Boolean,
+      default: false,
     },
     isDeleted: {
       type: Boolean,
