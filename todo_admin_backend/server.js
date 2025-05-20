@@ -24,7 +24,7 @@ const tagRoutes = require("./api/Masters/Tags/Router/tags.router");
 const priorityRoutes = require("./api/Masters/Priority/Router/priority.router");
 const statusRoutes = require("./api/Masters/Status/Router/status.router");
 const projectRoutes = require("./api/ProjectManagement/Projects/Router/projects.router");
-const taskRoutes = require("./api/ProjectManagement/Projects/Router/projects.router");
+const taskRoutes = require("./api/ProjectManagement/Tasks/Router/tasks.router");
 
 // Routes Middleware
 app.use("/api/v1/admin/company", companyRoutes);

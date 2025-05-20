@@ -5,6 +5,7 @@ const generateOTP = require("../../../helpers/generateOTP");
 const sendMail = require("../../../helpers/mailConfig");
 const CompanyModel = require("../Model/company.model");
 const UserModel = require("../../UserManagement/Model/user.model");
+const generatePassword = require("../../../helpers/generatePassword");
 const salt = 10;
 
 // Register Company Controller
@@ -125,8 +126,8 @@ exports.verifyOTP = async (req, res) => {
   }
 };
 
-// Get Company Details Controller
-exports.getAllCompanyDetails = async (req, res) => {
+// Get All Companies List Controller
+exports.getAllCompanyList = async (req, res) => {
   let data = req.body;
   let filter = { isDeleted: false, isActive: true };
 
@@ -194,3 +195,64 @@ exports.getDetailsById = async (req, res) => {
     });
   }
 };
+
+// // Add User to Company Controller
+// exports.addUser = async (req, res) => {
+//   let data = req.body;
+//   let filter = { isDeleted: false, isActive: true };
+//   filter._id = data.companyId;
+
+//   try {
+//     let getData = await CompanyModel.findOne(filter);
+
+//     if (!getData) {
+//       return res.status(201).json({
+//         success: false,
+//         message: "No companies found!!",
+//       });
+//     } else {
+//       let isUserExist = await UserModel.findOne({
+//         email: data.email,
+//         isDeleted: false,
+//       });
+
+//       if (isUserExist) {
+//         const updateUser = await UserModel.findByIdAndUpdate(
+//           isUserExist._id,
+//           {
+//             $push: { company_details: data.companyId },
+//           },
+//           { new: true }
+//         );
+
+//         return res.status(201).json({
+//           success: true,
+//           message: "User added successfully!!",
+//           data: updateUser,
+//         });
+//       }
+
+//       let password = generatePassword();
+//       const newData = await UserModel({
+//         username: data.email,
+//         email: data.email,
+//         role: data.role,
+//         password: password,
+//         myProjects: [req.params.projectId],
+//         myTasks: [],
+//         company_details: [data.companyId],
+//       }).save();
+//       return res.status(201).json({
+//         success: true,
+//         message: "User added successfully!!",
+//         data: newData,
+//       });
+//     }
+//   } catch (error) {
+//     return res.status(500).json({
+//       success: false,
+//       message: "Something went wrong!!",
+//       errorMessage: error.message,
+//     });
+//   }
+// };

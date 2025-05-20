@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
     if (userMailRegisterWithCompany) {
       return res.status(201).json({
         success: false,
-        message: "EmailId Already registered as Company!!",
+        message: "EmailId Already registered!!",
       });
     }
 
@@ -109,6 +109,42 @@ exports.login = async (req, res) => {
           message: "Invalid Credentials!!",
         });
       }
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong!!",
+      errorMessage: error.message,
+    });
+  }
+};
+
+// Get User Details By ID Controller
+exports.getAllUserList = async (req, res) => {
+  let data = req.body;
+  let filter = { isDeleted: false };
+
+  try {
+    filter._id = req?.params?.userId;
+    let allData = await UserModel.find(filter).populate([
+      {
+        path: "company_details",
+      },
+      { path: "myProjects" },
+      { path: "myTasks" },
+    ]);
+
+    if (allData.length < 1) {
+      return res.status(201).json({
+        success: false,
+        message: "No users found!!",
+      });
+    } else {
+      return res.status(201).json({
+        success: true,
+        message: "Get users list!!",
+        data: allData,
+      });
     }
   } catch (error) {
     return res.status(500).json({
