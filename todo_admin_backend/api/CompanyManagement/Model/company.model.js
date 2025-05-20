@@ -1,10 +1,10 @@
 // Imports & Configs
 const mongoose = require("mongoose");
 
-// User Schema
+// Company Schema
 const companySchema = new mongoose.Schema(
   {
-    company_name: {
+    name: {
       type: String,
       required: true,
     },
@@ -12,31 +12,21 @@ const companySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    registerUrl: {
+    slug: {
       type: String,
     },
-    role: {
+    invitationUrl: {
       type: String,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    allProjects: {
-      type: Array,
-      ref: "project",
-      default: [],
-    },
-    allUsers: {
-      type: Array,
-      ref: "user",
-      default: [],
     },
     otp: {
       type: Number,
     },
     otpExpiry: {
       type: String,
+    },
+    otpVerified: {
+      type: Boolean,
+      default: false,
     },
     isActive: {
       type: Boolean,

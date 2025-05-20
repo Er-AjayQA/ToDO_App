@@ -1,12 +1,9 @@
 // Imports & Configs
 require("dotenv").config();
-const bcrypt = require("bcrypt");
 const generateOTP = require("../../../helpers/generateOTP");
+const generateUniqueSlug = require("../../../helpers/generateSlug");
 const sendMail = require("../../../helpers/mailConfig");
 const CompanyModel = require("../Model/company.model");
-const UserModel = require("../../UserManagement/Model/user.model");
-const generatePassword = require("../../../helpers/generatePassword");
-const salt = 10;
 
 // Register Company Controller
 exports.registerCompany = async (req, res) => {
@@ -14,7 +11,8 @@ exports.registerCompany = async (req, res) => {
 
   try {
     let isCompanyExisting = await CompanyModel.findOne({
-      company_name: data.company_name,
+      name: data.name,
+      email: data.email,
       isDeleted: false,
     });
 
@@ -24,23 +22,24 @@ exports.registerCompany = async (req, res) => {
         message: "Company already registered!!",
       });
     } else {
+      let slug = await generateUniqueSlug(data.name, CompanyModel);
       let OTP = generateOTP();
       const otpExpiry = new Date(Date.now() + 15 * 60 * 1000);
       let mailData = {
         to: data.email,
-        subject: "OTP Verification",
-        body: `Please use the below OTP for verification. ${OTP}`,
+        subject: "ToDO OTP Verification",
+        body: `<div>
+        <p>Congratulation! You are one step away to experience the wonderful roadmap to manage your work.</p>
+        <span>Use the OTP to complete the registration: <b>${OTP}</b></span>
+        </div>`,
       };
       await sendMail(mailData);
 
-      let hashedPassword = await bcrypt.hash(data.password, salt);
-
       let newData = await CompanyModel({
         ...data,
+        slug,
         otp: OTP,
         otpExpiry,
-        password: hashedPassword,
-        role: "admin",
       }).save();
 
       return res.status(201).json({
@@ -72,8 +71,15 @@ exports.verifyOTP = async (req, res) => {
         message: "Company not found!!",
       });
     } else {
-      // Check if OTP is expired
+      if (isCompanyExisting.otpVerified) {
+        return res.status(400).json({
+          success: false,
+          message: "OTP already verified!",
+        });
+      }
+
       if (isCompanyExisting.otpExpiry < new Date()) {
+        // Check if OTP is expired
         return res.status(400).json({
           success: false,
           message: "OTP has expired!",
@@ -87,33 +93,23 @@ exports.verifyOTP = async (req, res) => {
           message: "Invalid OTP!",
         });
       } else {
-        const registerUrl = `http://localhost:5173/todo/${isCompanyExisting._id}/register`;
-        await CompanyModel.findByIdAndUpdate(companyId, {
-          registerUrl,
-          isActive: true,
-          otp: null,
-          otpExpiry: null,
-        });
-
-        const newUser = await UserModel.create({
-          username: isCompanyExisting.email.split("@")[0],
-          email: isCompanyExisting.email,
-          role: "admin",
-          password: isCompanyExisting.password,
-          myProjects: [],
-          myTasks: [],
-          company_details: [isCompanyExisting._id],
-        });
-
-        // Add this user to company's allUsers array
-        await CompanyModel.findByIdAndUpdate(companyId, {
-          $push: { allUsers: newUser._id },
-        });
+        const invitationUrl = `http://localhost:5173/todo/invite/${isCompanyExisting._id}`;
+        const updatedData = await CompanyModel.findByIdAndUpdate(
+          companyId,
+          {
+            invitationUrl,
+            isActive: true,
+            otpVerified: true,
+            otp: null,
+            otpExpiry: null,
+          },
+          { new: true }
+        );
 
         return res.status(200).json({
           success: true,
           message: "Company registered successfully!",
-          registerUrl,
+          data: updatedData,
         });
       }
     }
@@ -125,134 +121,3 @@ exports.verifyOTP = async (req, res) => {
     });
   }
 };
-
-// Get All Companies List Controller
-exports.getAllCompanyList = async (req, res) => {
-  let data = req.body;
-  let filter = { isDeleted: false, isActive: true };
-
-  try {
-    let allData = await CompanyModel.find(filter).populate([
-      {
-        path: "allProjects",
-      },
-      { path: "allUsers", select: "-password" },
-    ]);
-
-    if (allData.length < 1) {
-      return res.status(201).json({
-        success: false,
-        message: "No companies found!!",
-      });
-    } else {
-      return res.status(201).json({
-        success: true,
-        message: "Get companies list!!",
-        data: allData,
-      });
-    }
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong!!",
-      errorMessage: error.message,
-    });
-  }
-};
-
-// Get Company Details Controller
-exports.getDetailsById = async (req, res) => {
-  let data = req.body;
-  let companyId = req.params.companyId;
-  let filter = { isDeleted: false, isActive: true };
-  filter._id = companyId;
-
-  try {
-    let getData = await CompanyModel.findOne(filter).populate([
-      {
-        path: "allProjects",
-      },
-      { path: "allUsers", select: "-password" },
-    ]);
-
-    if (!getData) {
-      return res.status(201).json({
-        success: false,
-        message: "No companies found!!",
-      });
-    } else {
-      return res.status(201).json({
-        success: true,
-        message: "Get company Details!!",
-        data: getData,
-      });
-    }
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong!!",
-      errorMessage: error.message,
-    });
-  }
-};
-
-// // Add User to Company Controller
-// exports.addUser = async (req, res) => {
-//   let data = req.body;
-//   let filter = { isDeleted: false, isActive: true };
-//   filter._id = data.companyId;
-
-//   try {
-//     let getData = await CompanyModel.findOne(filter);
-
-//     if (!getData) {
-//       return res.status(201).json({
-//         success: false,
-//         message: "No companies found!!",
-//       });
-//     } else {
-//       let isUserExist = await UserModel.findOne({
-//         email: data.email,
-//         isDeleted: false,
-//       });
-
-//       if (isUserExist) {
-//         const updateUser = await UserModel.findByIdAndUpdate(
-//           isUserExist._id,
-//           {
-//             $push: { company_details: data.companyId },
-//           },
-//           { new: true }
-//         );
-
-//         return res.status(201).json({
-//           success: true,
-//           message: "User added successfully!!",
-//           data: updateUser,
-//         });
-//       }
-
-//       let password = generatePassword();
-//       const newData = await UserModel({
-//         username: data.email,
-//         email: data.email,
-//         role: data.role,
-//         password: password,
-//         myProjects: [req.params.projectId],
-//         myTasks: [],
-//         company_details: [data.companyId],
-//       }).save();
-//       return res.status(201).json({
-//         success: true,
-//         message: "User added successfully!!",
-//         data: newData,
-//       });
-//     }
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: "Something went wrong!!",
-//       errorMessage: error.message,
-//     });
-//   }
-// };
