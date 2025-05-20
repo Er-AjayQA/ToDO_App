@@ -93,7 +93,7 @@ exports.verifyOTP = async (req, res) => {
           message: "Invalid OTP!",
         });
       } else {
-        const invitationUrl = `http://localhost:5173/todo/invite/${isCompanyExisting._id}`;
+        const invitationUrl = `http://localhost:5173/todo/invite/${isCompanyExisting.slug}/register`;
         const updatedData = await CompanyModel.findByIdAndUpdate(
           companyId,
           {
@@ -112,6 +112,47 @@ exports.verifyOTP = async (req, res) => {
           data: updatedData,
         });
       }
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong!!",
+      errorMessage: error.message,
+    });
+  }
+};
+
+// Generate Invitation Link Controller
+exports.generateInvitationLink = async (req, res) => {
+  const data = req.body;
+  const companyId = req.params.id;
+
+  try {
+    let isCompanyExisting = await CompanyModel.findById(companyId);
+
+    if (!isCompanyExisting) {
+      return res.status(201).json({
+        success: false,
+        message: "Company not found!!",
+      });
+    } else {
+      const invitationUrl = isCompanyExisting.invitationUrl;
+
+      let mailData = {
+        to: data.email,
+        subject: `Invitation for ${isCompanyExisting.name} ToDo Platform.`,
+        body: `<div>
+        <p>You are invited to join the team.</p>
+        <span>Use the following link to register yourself: <a href=${invitationUrl}>Register</a></span>
+        </div>`,
+      };
+      await sendMail(mailData);
+
+      return res.status(200).json({
+        success: true,
+        message: "Invitation link generated successfully!",
+        data: { invitationUrl },
+      });
     }
   } catch (error) {
     return res.status(500).json({

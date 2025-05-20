@@ -25,18 +25,27 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "manager", "user"],
       default: "user",
     },
-    company_details: {
-      type: Array,
-      default: [],
+    avatar: {
+      type: String,
+    },
+    company_id: {
+      type: String,
+      required: true,
       ref: "company",
     },
-    myProjects: {
+    project_ids: {
       type: Array,
       ref: "project",
+      default: [],
     },
-    myTasks: {
+    task_ids: {
       type: Array,
       ref: "task",
+      default: [],
+    },
+    login_dates: {
+      type: Array,
+      default: [],
     },
     isDeleted: {
       type: Boolean,

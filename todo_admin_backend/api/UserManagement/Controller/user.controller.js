@@ -3,27 +3,13 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const UserModel = require("../Model/user.model");
-const CompanyModel = require("../../CompanyManagement/Model/company.model");
 const salt = 10;
 
 // User Register Controller
 exports.register = async (req, res) => {
   const data = req.body;
-  const companyId = req.params.companyId;
+  const companyId = req?.params?.id;
   try {
-    let userMailRegisterWithCompany = await CompanyModel.findOne({
-      email: data.email,
-      isDeleted: false,
-      isActive: true,
-    });
-
-    if (userMailRegisterWithCompany) {
-      return res.status(201).json({
-        success: false,
-        message: "EmailId Already registered!!",
-      });
-    }
-
     let isUserAlreadyExist = await UserModel.findOne({
       username: data.username,
       email: data.email,
@@ -42,15 +28,8 @@ exports.register = async (req, res) => {
     const registerUser = await UserModel({
       ...data,
       password: hashedPassword,
-      company_details: companyId,
+      company_id: companyId,
     }).save();
-
-    let allUsers = [];
-    allUsers.push(registerUser._id);
-
-    await CompanyModel.findByIdAndUpdate(companyId, {
-      allUsers: allUsers,
-    });
 
     return res.status(201).json({
       success: true,
@@ -109,42 +88,6 @@ exports.login = async (req, res) => {
           message: "Invalid Credentials!!",
         });
       }
-    }
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: "Something went wrong!!",
-      errorMessage: error.message,
-    });
-  }
-};
-
-// Get User Details By ID Controller
-exports.getAllUserList = async (req, res) => {
-  let data = req.body;
-  let filter = { isDeleted: false };
-
-  try {
-    filter._id = req?.params?.userId;
-    let allData = await UserModel.find(filter).populate([
-      {
-        path: "company_details",
-      },
-      { path: "myProjects" },
-      { path: "myTasks" },
-    ]);
-
-    if (allData.length < 1) {
-      return res.status(201).json({
-        success: false,
-        message: "No users found!!",
-      });
-    } else {
-      return res.status(201).json({
-        success: true,
-        message: "Get users list!!",
-        data: allData,
-      });
     }
   } catch (error) {
     return res.status(500).json({
