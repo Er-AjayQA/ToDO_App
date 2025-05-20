@@ -11,7 +11,6 @@ exports.register = async (req, res) => {
   const companyId = req?.params?.id;
   try {
     let isUserAlreadyExist = await UserModel.findOne({
-      username: data.username,
       email: data.email,
       isDeleted: false,
     });
@@ -51,7 +50,7 @@ exports.login = async (req, res) => {
 
   try {
     let userExist = await UserModel.findOne({
-      $or: [{ email: data.username }, { username: data.username }],
+      email: data.email,
       isDeleted: false,
     });
 
@@ -69,9 +68,9 @@ exports.login = async (req, res) => {
       if (passwordMatch) {
         let userDetails = {
           id: userExist._id,
-          username: userExist.username,
+          name: userExist.firstName + " " + userExist.lastName,
           email: userExist.email,
-          companyId: userExist.company_details,
+          companyId: userExist.company_id,
         };
         const token = jwt.sign(userDetails, process.env.JWT_SECRET, {
           expiresIn: "1h",

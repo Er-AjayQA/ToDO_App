@@ -162,3 +162,63 @@ exports.generateInvitationLink = async (req, res) => {
     });
   }
 };
+
+// Get Companies List Controller
+exports.getAllCompanies = async (req, res) => {
+  let filter = { isDeleted: false, isActive: true };
+  let limit = req?.body?.limit || 10;
+
+  try {
+    let getAllData = await CompanyModel.find(filter).limit(limit);
+
+    if (getAllData.length < 1) {
+      return res.status(200).json({
+        success: false,
+        message: "No data found!!",
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: "Companies List!!",
+        totalRecords: getAllData.length,
+        totalPages: Math.ceil(getAllData.length / limit),
+        data: getAllData,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong!!",
+      errorMessage: error.message,
+    });
+  }
+};
+
+// Get Company Details Controller
+exports.getCompanyDetails = async (req, res) => {
+  let filter = { isDeleted: false, isActive: true };
+  filter._id = req?.params?.id;
+
+  try {
+    let getData = await CompanyModel.findOne(filter);
+
+    if (!getData) {
+      return res.status(200).json({
+        success: false,
+        message: "No data found!!",
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: "Company details found successfully!!",
+        data: getData,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong!!",
+      errorMessage: error.message,
+    });
+  }
+};

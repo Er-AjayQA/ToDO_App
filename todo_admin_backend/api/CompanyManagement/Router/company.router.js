@@ -10,6 +10,8 @@ router.post(
   "/generate-invitation-link/:id",
   CompanyController.generateInvitationLink
 );
+router.post("/get-details/:id", CompanyController.getCompanyDetails);
+router.post("/get-companies-details/", CompanyController.getAllCompanies);
 
 // Export Router
 module.exports = router;
