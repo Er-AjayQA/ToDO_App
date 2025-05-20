@@ -6,6 +6,8 @@ const CompanyController = require("../Controller/company.controller");
 // Defines Routers
 router.post("/register", CompanyController.registerCompany);
 router.post("/verifyOTP/:id", CompanyController.verifyOTP);
+router.post("/get-all-companies", CompanyController.getAllCompanyDetails);
+router.post("/get-by-id/:companyId", CompanyController.getDetailsById);
 
 // Export Router
 module.exports = router;

@@ -17,7 +17,10 @@ const companySchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "manager", "none"],
+    },
+    password: {
+      type: String,
+      required: true,
     },
     allProjects: {
       type: Array,

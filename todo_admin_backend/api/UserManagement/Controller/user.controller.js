@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const UserModel = require("../Model/user.model");
+const CompanyModel = require("../../CompanyManagement/Model/company.model");
 const salt = 10;
 
 // User Register Controller
@@ -10,6 +11,19 @@ exports.register = async (req, res) => {
   const data = req.body;
   const companyId = req.params.companyId;
   try {
+    let userMailRegisterWithCompany = await CompanyModel.findOne({
+      email: data.email,
+      isDeleted: false,
+      isActive: true,
+    });
+
+    if (userMailRegisterWithCompany) {
+      return res.status(201).json({
+        success: false,
+        message: "EmailId Already registered as Company!!",
+      });
+    }
+
     let isUserAlreadyExist = await UserModel.findOne({
       username: data.username,
       email: data.email,
@@ -30,6 +44,13 @@ exports.register = async (req, res) => {
       password: hashedPassword,
       company_details: companyId,
     }).save();
+
+    let allUsers = [];
+    allUsers.push(registerUser._id);
+
+    await CompanyModel.findByIdAndUpdate(companyId, {
+      allUsers: allUsers,
+    });
 
     return res.status(201).json({
       success: true,
@@ -71,6 +92,7 @@ exports.login = async (req, res) => {
           id: userExist._id,
           username: userExist.username,
           email: userExist.email,
+          companyId: userExist.company_details,
         };
         const token = jwt.sign(userDetails, process.env.JWT_SECRET, {
           expiresIn: "1h",

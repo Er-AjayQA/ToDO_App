@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
     company_details: {
-      type: String,
-      default: {},
+      type: Array,
+      default: [],
       ref: "company",
     },
     myProjects: {
