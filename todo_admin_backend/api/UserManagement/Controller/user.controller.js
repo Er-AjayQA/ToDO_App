@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const UserModel = require("../Model/user.model");
+const CompanyModel = require("../../CompanyManagement/Model/company.model");
 const salt = 10;
 
 // User Register Controller
@@ -10,8 +11,22 @@ exports.register = async (req, res) => {
   const data = req.body;
   const companyId = req?.params?.id;
   try {
+    let isCompanyExist = await CompanyModel.findOne({
+      _id: companyId,
+      isDeleted: false,
+      isActive: true,
+    });
+
+    if (!isCompanyExist) {
+      return res.status(201).json({
+        success: false,
+        message: "Company not found!!",
+      });
+    }
+
     let isUserAlreadyExist = await UserModel.findOne({
       email: data.email,
+      company_id: companyId,
       isDeleted: false,
     });
 
@@ -75,6 +90,9 @@ exports.login = async (req, res) => {
         const token = jwt.sign(userDetails, process.env.JWT_SECRET, {
           expiresIn: "1h",
         });
+
+        userExist.login_dates.push(Date.now());
+        await userExist.save();
 
         return res.status(201).json({
           success: true,

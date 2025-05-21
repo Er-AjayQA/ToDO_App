@@ -33,16 +33,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       ref: "company",
     },
-    project_ids: {
-      type: Array,
-      ref: "project",
-      default: [],
-    },
-    task_ids: {
-      type: Array,
-      ref: "task",
-      default: [],
-    },
     login_dates: {
       type: Array,
       default: [],
