@@ -89,12 +89,15 @@ exports.getAll = async (req, res) => {
 // Update Project Details
 exports.update = async (req, res) => {
   const data = req.body;
+  const projectId = req?.params?.id;
   const filter = { isDeleted: false, company_id: req?.user?.companyId };
 
   let updateData = {};
 
   try {
-    if (limit < 1) limit = 10;
+    if (projectId) {
+      filter._id = projectId;
+    }
 
     if (data?.name !== "" && data?.name !== undefined) {
       updateData.name = data?.name;
@@ -113,11 +116,9 @@ exports.update = async (req, res) => {
       updateData.estimated_end_time = data?.estimated_end_time;
     }
 
-    const isProjectExist = await ProjectModel.findOne(filter)
-      .limit(limit)
-      .sort({ _id: sort });
+    const isProjectExist = await ProjectModel.findById(projectId);
 
-    if (!isProjectExist) {
+    if (!isProjectExist || isProjectExist.isDeleted === true) {
       return res.status(201).json({
         success: false,
         message: "No Projects Found!!",

@@ -6,7 +6,7 @@ const authenticateToken = require("../../../../helpers/authentication");
 
 // Defines Routers
 router.post("/create", authenticateToken, ProjectController.create);
-router.post("/update", authenticateToken, ProjectController.update);
+router.post("/update/:id", authenticateToken, ProjectController.update);
 router.post("/get-all", authenticateToken, ProjectController.getAll);
 
 // Export Router
