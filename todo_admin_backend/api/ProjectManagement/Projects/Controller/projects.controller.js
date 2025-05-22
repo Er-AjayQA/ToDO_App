@@ -4,9 +4,12 @@ const ProjectModel = require("../Model/projects.model");
 // Create Project Controller
 exports.create = async (req, res) => {
   const data = req.body;
-  let usersList = [req.user.id];
+
   try {
-    const isProjectExist = await ProjectModel.findOne({ name: data.name });
+    const isProjectExist = await ProjectModel.findOne({
+      name: data.name,
+      isDeleted: false,
+    });
 
     if (isProjectExist) {
       return res.status(201).json({
@@ -14,16 +17,15 @@ exports.create = async (req, res) => {
         message: "Project already existed!!",
       });
     } else {
-      const newProject = await ProjectModel({
+      const newData = await ProjectModel({
         ...data,
-        users: usersList,
-        createdBy: req.user.id,
+        company_id: req?.user?.companyId,
       }).save();
 
       return res.status(201).json({
         success: true,
         message: "Project created successfully!!",
-        data: newProject,
+        data: newData,
       });
     }
   } catch (error) {
@@ -38,9 +40,9 @@ exports.create = async (req, res) => {
 // Get All Project Controller
 exports.getAll = async (req, res) => {
   const data = req.body;
-  const filter = { isDeleted: false };
-  let limit = parseInt(req?.body?.limit) || 10;
-  let sort = req?.body?.sort || "asc";
+  const filter = { isDeleted: false, company_id: req?.user?.companyId };
+  let limit = parseInt(data?.limit) || 10;
+  let sort = data?.sort === "desc" ? -1 : 1;
 
   if (limit < 1) limit = 10;
 
@@ -49,18 +51,24 @@ exports.getAll = async (req, res) => {
     filter.name = nameRegex;
   }
 
+  if (
+    data.create_date !== null ||
+    data.create_date !== undefined ||
+    data.create_date !== ""
+  ) {
+    filter.create_date = req.body.create_date;
+  }
+
+  if (
+    data.start_date !== null ||
+    data.start_date !== undefined ||
+    data.start_date !== ""
+  ) {
+    filter.start_date = req.body.start_date;
+  }
+
   try {
     const getAllProjects = await ProjectModel.find(filter)
-      .populate([
-        {
-          path: "users",
-          select: ["username", "email"],
-        },
-        {
-          path: "createdBy",
-          select: ["username", "email"],
-        },
-      ])
       .limit(limit)
       .sort({ _id: sort });
 

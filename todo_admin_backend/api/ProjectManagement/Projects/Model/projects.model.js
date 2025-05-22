@@ -10,21 +10,24 @@ const projectsSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
+      default: null,
     },
-    users: {
-      type: Array,
-      required: true,
-      ref: "user",
+    create_date: {
+      type: String,
+      default: Date.now(),
     },
-    createdBy: {
+    start_date: {
+      type: String,
+      default: null,
+    },
+    estimated_end_time: {
+      type: String,
+      default: null,
+    },
+    company_id: {
       type: String,
       required: true,
-      ref: "user",
-    },
-    tasks: {
-      type: Array,
-      ref: "task",
+      ref: "company",
     },
     isDeleted: {
       type: Boolean,

@@ -12,7 +12,6 @@ exports.register = async (req, res) => {
   const companyId = req?.params?.id;
   try {
     let isCompanyExist = await CompanyModel.findOne({
-      _id: companyId,
       isDeleted: false,
       isActive: true,
     });
