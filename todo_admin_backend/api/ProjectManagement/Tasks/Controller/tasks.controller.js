@@ -1,30 +1,55 @@
 // Imports & Configs
+const CompanyModel = require("../../../CompanyManagement/Model/company.model");
+const ProjectModel = require("../../Projects/Model/projects.model");
 const TaskModel = require("../Model/tasks.model");
 
 // Create Task Controller
-exports.create = async (req, res) => {
+exports.createTask = async (req, res) => {
   const data = req.body;
-  let usersDetail = req.user.id;
-  try {
-    const isProjectExist = await ProjectModel.findOne({ name: data.name });
+  const paramData = req?.params;
 
-    if (isProjectExist) {
+  try {
+    const isCompanyExist = await CompanyModel.findOne({
+      _id: req?.user?.companyId,
+      isDeleted: false,
+      isActive: true,
+    });
+
+    if (!isCompanyExist) {
       return res.status(201).json({
         success: false,
-        message: "Project already existed!!",
+        message: "Company not found!!",
       });
     } else {
-      const newProject = await ProjectModel({
-        ...data,
-        users: usersList,
-        createdBy: req.user.id,
-      }).save();
-
-      return res.status(201).json({
-        success: true,
-        message: "Project created successfully!!",
-        data: newProject,
+      const isProjectExist = await ProjectModel.findOne({
+        slug: paramData.project_slug,
       });
+
+      if (!isProjectExist) {
+        return res.status(201).json({
+          success: false,
+          message: "Project not found!!",
+        });
+      } else {
+        let statusChangeInfo = {
+          changeDate: new Date(),
+          changedBy: req?.user?.id,
+        };
+        const newTask = await TaskModel({
+          ...data,
+          companyId: req?.user?.companyId,
+          projectId: isProjectExist._id,
+          task_createDate: new Date().toISOString(),
+          status_changeInfo: [statusChangeInfo],
+          createdBy: req?.user?.id,
+        }).save();
+
+        return res.status(201).json({
+          success: true,
+          message: "Task created successfully!!",
+          data: newTask,
+        });
+      }
     }
   } catch (error) {
     return res.status(500).json({
@@ -36,7 +61,7 @@ exports.create = async (req, res) => {
 };
 
 // Get All Tasks Controller
-exports.getAll = async (req, res) => {
+exports.getAllTasks = async (req, res) => {
   const data = req.body;
   const filter = { isDeleted: false };
   let limit = parseInt(req?.body?.limit) || 10;
