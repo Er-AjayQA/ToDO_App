@@ -64,43 +64,70 @@ exports.createTask = async (req, res) => {
 exports.getAllTasks = async (req, res) => {
   const data = req.body;
   const filter = { isDeleted: false };
-  let limit = parseInt(req?.body?.limit) || 10;
-  let sort = req?.body?.sort || "asc";
-
-  if (limit < 1) limit = 10;
-
-  if (data.name != "" && data.name != undefined) {
-    var nameRegex = new RegExp(data.name, "i");
-    filter.name = nameRegex;
-  }
 
   try {
-    const getAllProjects = await ProjectModel.find(filter)
-      .populate([
-        {
-          path: "users",
-          select: ["username", "email"],
-        },
-        {
-          path: "createdBy",
-          select: ["username", "email"],
-        },
-      ])
-      .limit(limit)
-      .sort({ _id: sort });
+    let limit = parseInt(req?.body?.limit) || 10;
+    let sort = data?.sort || "asc";
+    if (limit < 1) limit = 10;
 
-    if (getAllProjects.length <= 0) {
+    const projectSlug = req?.params?.project_slug;
+
+    if (data?.status) {
+      filter.status = data?.status;
+    }
+
+    if (data?.priority) {
+      filter.priority = data?.priority;
+    }
+
+    if (data?.Severity) {
+      filter.Severity = data?.Severity;
+    }
+
+    if (data?.createdBy) {
+      filter.createdBy = data?.createdBy;
+    }
+
+    const getProjectDetails = await ProjectModel.findOne({
+      slug: projectSlug,
+      isDeleted: false,
+    });
+
+    if (!getProjectDetails) {
       return res.status(201).json({
         success: false,
         message: "No Projects Found!!",
       });
     } else {
-      return res.status(201).json({
-        success: true,
-        message: "Data fetched successfully!!",
-        records: getAllProjects.length,
-        data: getAllProjects,
-      });
+      filter.projectId = getProjectDetails._id;
+
+      const getAllTasks = await TaskModel.find(filter)
+        .populate([
+          {
+            path: "companyId",
+            select: ["name", "slug"],
+          },
+          {
+            path: "projectId",
+            select: ["name", "slug"],
+          },
+        ])
+        .limit(limit)
+        .sort({ _id: sort });
+
+      if (getAllTasks.length <= 0) {
+        return res.status(201).json({
+          success: false,
+          message: "No Tasks Found!!",
+        });
+      } else {
+        return res.status(201).json({
+          success: true,
+          message: "Data fetched successfully!!",
+          records: getAllTasks.length,
+          data: getAllTasks,
+        });
+      }
     }
   } catch (error) {
     return res.status(500).json({

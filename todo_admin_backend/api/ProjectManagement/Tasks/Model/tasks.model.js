@@ -1,7 +1,7 @@
 // Imports & Configs
 const mongoose = require("mongoose");
 
-// User Schema
+// Task Schema
 const tasksSchema = new mongoose.Schema(
   {
     title: {
@@ -11,6 +11,11 @@ const tasksSchema = new mongoose.Schema(
     description: {
       type: String,
       required: true,
+    },
+    folderId: {
+      type: String,
+      required: true,
+      ref: "folder",
     },
     companyId: {
       type: String,
@@ -25,7 +30,7 @@ const tasksSchema = new mongoose.Schema(
     assign_to: {
       type: String,
       ref: "user",
-      default: "",
+      default: null,
     },
     createdBy: {
       type: String,
@@ -48,11 +53,18 @@ const tasksSchema = new mongoose.Schema(
       default: "Pending",
     },
     task_createDate: {
-      type: String,
-      value: Date.now(),
+      type: Date,
+      default: Date.now,
     },
-    status_changeInfo: {
-      type: Array,
+    task_startDate: {
+      type: Date,
+      default: Date.now,
+      default: null,
+    },
+    task_endDate: {
+      type: Date,
+      default: Date.now,
+      default: null,
     },
     isDeleted: {
       type: Boolean,

@@ -1,19 +1,14 @@
 // Imports & Configs
 const express = require("express");
 const router = express.Router();
-const TaskController = require("../Controller/tasks.controller");
+const BacklogController = require("../Controller/folder.controller");
 const authenticateToken = require("../../../../helpers/authentication");
 
 // Defines Routers
 router.post(
-  "/:project_slug/create_task",
+  "/:project_slug/folders/create_folder",
   authenticateToken,
-  TaskController.createTask
-);
-router.post(
-  "/:project_slug/get_all_tasks",
-  authenticateToken,
-  TaskController.getAllTasks
+  BacklogController.createFolder
 );
 
 // Export Router

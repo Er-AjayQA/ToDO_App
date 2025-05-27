@@ -21,12 +21,14 @@ app.use(express.urlencoded({ extended: true }));
 const companyRoutes = require("./api/CompanyManagement/Router/company.router");
 const userRoutes = require("./api/UserManagement/Router/user.router");
 const projectRoutes = require("./api/ProjectManagement/Projects/Router/projects.router");
+const folderRoutes = require("./api/ProjectManagement/Folder/Router/folder.router");
 const taskRoutes = require("./api/ProjectManagement/Tasks/Router/tasks.router");
 
 // Routes Middleware
 app.use("/api/v1/admin/company", companyRoutes);
 app.use("/api/v1/admin/users", userRoutes);
 app.use("/api/v1/admin/projects", projectRoutes);
+app.use("/api/v1/admin/", folderRoutes);
 app.use("/api/v1/admin/tasks", taskRoutes);
 
 // Listening to Server

@@ -74,6 +74,12 @@ exports.login = async (req, res) => {
         message: "User not exist!!",
       });
     } else {
+      const companyData = await CompanyModel.findOne({
+        _id: userExist.company_id,
+        isDeleted: false,
+        isActive: true,
+      });
+
       let passwordMatch = await bcrypt.compare(
         data.password,
         userExist.password
@@ -85,6 +91,7 @@ exports.login = async (req, res) => {
           name: userExist.firstName + " " + userExist.lastName,
           email: userExist.email,
           companyId: userExist.company_id,
+          company_slug: companyData.slug,
         };
         const token = jwt.sign(userDetails, process.env.JWT_SECRET, {
           expiresIn: "1h",
