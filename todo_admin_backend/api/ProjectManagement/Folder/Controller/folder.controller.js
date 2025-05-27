@@ -6,14 +6,16 @@ const FolderModel = require("../Model/folder.model");
 exports.createFolder = async (req, res) => {
   try {
     const data = req.body;
-    const company_slug = req?.user?.company_slug;
-    const project_slug = req?.params?.project_slug;
+    const company_id = req?.user?.company_id;
+    const project_id = req?.params?.project_id;
 
     const isDataExist = await FolderModel.findOne({
-      name: { $regex: new RegExp(`^${data.name}$`, "i") },
-      company_slug,
-      project_slug,
-      isDeleted: false,
+      $and: [
+        { name: data.name },
+        { company_id: company_id },
+        { project_id: project_id },
+        { isDeleted: false },
+      ],
     });
 
     if (isDataExist) {
@@ -22,13 +24,10 @@ exports.createFolder = async (req, res) => {
         message: "Folder already existed!!",
       });
     } else {
-      let slug = await generateUniqueSlug(data.name, FolderModel);
-      data.slug = slug;
-
       const newData = await FolderModel({
         ...data,
-        company_slug,
-        project_slug,
+        company_id,
+        project_id,
       }).save();
 
       return res.status(201).json({

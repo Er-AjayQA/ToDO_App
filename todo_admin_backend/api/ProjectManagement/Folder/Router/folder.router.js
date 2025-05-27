@@ -6,7 +6,7 @@ const authenticateToken = require("../../../../helpers/authentication");
 
 // Defines Routers
 router.post(
-  "/:project_slug/folders/create_folder",
+  "/:project_id/folders/create_folder",
   authenticateToken,
   BacklogController.createFolder
 );

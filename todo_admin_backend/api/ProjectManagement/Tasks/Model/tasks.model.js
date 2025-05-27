@@ -12,35 +12,30 @@ const tasksSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    folderId: {
-      type: String,
-      required: true,
-      ref: "folder",
-    },
-    companyId: {
+    company_id: {
       type: String,
       required: true,
       ref: "company",
     },
-    projectId: {
+    project_id: {
       type: String,
       required: true,
       ref: "project",
+    },
+    folder_id: {
+      type: String,
+      required: true,
+      ref: "folder",
     },
     assign_to: {
       type: String,
       ref: "user",
       default: null,
     },
-    createdBy: {
+    created_by: {
       type: String,
       required: true,
       ref: "user",
-    },
-    Severity: {
-      type: String,
-      enum: ["S1", "S2", "S3"],
-      default: "S3",
     },
     priority: {
       type: String,
@@ -52,16 +47,16 @@ const tasksSchema = new mongoose.Schema(
       enum: ["Pending", "In-Progress", "Hold", "Completed"],
       default: "Pending",
     },
-    task_createDate: {
+    create_on: {
       type: Date,
       default: Date.now,
     },
-    task_startDate: {
+    start_date: {
       type: Date,
       default: Date.now,
       default: null,
     },
-    task_endDate: {
+    end_date: {
       type: Date,
       default: Date.now,
       default: null,

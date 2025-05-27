@@ -4,9 +4,10 @@ const ProjectModel = require("../Model/projects.model");
 
 // Create Project Controller
 exports.createProject = async (req, res) => {
-  const data = req.body;
-
   try {
+    const data = req.body;
+    const company_id = req?.user?.company_id;
+
     const isProjectExist = await ProjectModel.findOne({
       name: data.name,
       isDeleted: false,
@@ -18,11 +19,10 @@ exports.createProject = async (req, res) => {
         message: "Project already existed!!",
       });
     } else {
-      let slug = await generateUniqueSlug(data.name, ProjectModel);
-      data.slug = slug;
       const newData = await ProjectModel({
         ...data,
-        company_id: req?.user?.companyId,
+        company_id,
+        create_date: new Date().toISOString(),
       }).save();
 
       return res.status(201).json({
@@ -43,7 +43,7 @@ exports.createProject = async (req, res) => {
 // Get All Project Controller
 exports.getAllProject = async (req, res) => {
   const data = req.body;
-  const filter = { isDeleted: false, company_id: req?.user?.companyId };
+  const filter = { isDeleted: false, company_id: req?.user?.company_id };
   let limit = parseInt(data?.limit) || 10;
   let sort = data?.sort === "desc" ? -1 : 1;
 
@@ -55,16 +55,8 @@ exports.getAllProject = async (req, res) => {
       filter.name = nameRegex;
     }
 
-    if (data?.create_date !== "" && data?.create_date !== undefined) {
-      filter.create_date = data?.create_date;
-    }
-
-    if (data?.start_date !== "" && data?.start_date !== undefined) {
-      filter.start_date = data?.start_date;
-    }
-
     const getAllProjects = await ProjectModel.find(filter)
-      .populate({ path: "company_id" })
+      .populate({ path: "company_id", select: ["name"] })
       .limit(limit)
       .sort({ _id: sort });
 
@@ -92,16 +84,16 @@ exports.getAllProject = async (req, res) => {
 
 // Get Project Details by SlugId Controller
 exports.getProjectById = async (req, res) => {
-  const slugId = req?.params?.slugId;
-  const filter = {
-    isDeleted: false,
-    company_id: req?.user.companyId,
-    slug: slugId,
-  };
-
   try {
+    const project_id = req?.params?.project_id;
+    const filter = {
+      isDeleted: false,
+      company_id: req?.user?.company_id,
+    };
+
     const getProjectDetails = await ProjectModel.findOne(filter).populate({
       path: "company_id",
+      select: ["name"],
     });
 
     if (!getProjectDetails) {
@@ -127,16 +119,9 @@ exports.getProjectById = async (req, res) => {
 
 // Update Project Details
 exports.updateProject = async (req, res) => {
-  const data = req.body;
-  const projectSlug = req?.params?.slugId;
-  const filter = { isDeleted: false, company_id: req?.user?.companyId };
-
-  let updateData = {};
-
   try {
-    if (projectSlug) {
-      filter.slug = projectSlug;
-    }
+    const data = req.body;
+    const filter = { isDeleted: false, _id: req?.params?.project_id };
 
     const isProjectExist = await ProjectModel.findOne(filter);
 
@@ -146,23 +131,16 @@ exports.updateProject = async (req, res) => {
         message: "No Projects Found!!",
       });
     } else {
+      let updateData = {};
       if (data?.name !== "" && data?.name !== undefined) {
         updateData.name = data?.name;
         filter.name = data?.name;
-        slug = await generateUniqueSlug(data.name, ProjectModel);
-        updateData.slug = slug;
       }
       if (data?.description !== "" && data?.description !== undefined) {
         updateData.description = data?.description;
       }
-      if (data?.start_date !== "" && data?.start_date !== undefined) {
-        updateData.start_date = data?.start_date;
-      }
-      if (
-        data?.estimated_end_time !== "" &&
-        data?.estimated_end_time !== undefined
-      ) {
-        updateData.estimated_end_time = data?.estimated_end_time;
+      if (data?.deadline !== "" && data?.deadline !== undefined) {
+        updateData.deadline = data?.deadline;
       }
 
       let updatedData = await ProjectModel.findByIdAndUpdate(

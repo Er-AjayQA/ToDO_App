@@ -8,14 +8,10 @@ const folderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    slug: {
-      type: String,
-      required: true,
-    },
-    company_slug: {
+    company_id: {
       type: String,
     },
-    project_slug: {
+    project_id: {
       type: String,
     },
     isDeleted: {

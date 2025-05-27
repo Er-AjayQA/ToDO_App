@@ -8,30 +8,22 @@ const projectsSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    slug: {
-      type: String,
-      required: true,
-    },
     description: {
       type: String,
-      default: null,
-    },
-    create_date: {
-      type: String,
-      default: Date.now(),
-    },
-    start_date: {
-      type: String,
-      default: null,
-    },
-    estimated_end_time: {
-      type: String,
-      default: null,
+      required: true,
     },
     company_id: {
       type: String,
       required: true,
       ref: "company",
+    },
+    create_date: {
+      type: String,
+      required: true,
+    },
+    deadline: {
+      type: String,
+      default: null,
     },
     isDeleted: {
       type: Boolean,
