@@ -22,7 +22,6 @@ exports.registerCompany = async (req, res) => {
         message: "Company already registered!!",
       });
     } else {
-      let slug = await generateUniqueSlug(data.name, CompanyModel);
       let OTP = generateOTP();
       const otpExpiry = new Date(Date.now() + 15 * 60 * 1000);
       let mailData = {
@@ -37,7 +36,6 @@ exports.registerCompany = async (req, res) => {
 
       let newData = await CompanyModel({
         ...data,
-        slug,
         otp: OTP,
         otpExpiry,
       }).save();
