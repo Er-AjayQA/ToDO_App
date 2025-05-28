@@ -6,11 +6,7 @@ const authenticateToken = require("../../../../helpers/authentication");
 
 // Defines Routers
 router.post("/create", authenticateToken, ProjectController.createProject);
-router.post(
-  "/update/:slugId",
-  authenticateToken,
-  ProjectController.updateProject
-);
+router.post("/update/:id", authenticateToken, ProjectController.updateProject);
 router.post("/get-all", authenticateToken, ProjectController.getAllProject);
 router.post(
   "/get-by-id/:slugId",

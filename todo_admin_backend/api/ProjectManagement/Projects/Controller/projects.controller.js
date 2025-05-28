@@ -121,7 +121,10 @@ exports.getProjectById = async (req, res) => {
 exports.updateProject = async (req, res) => {
   try {
     const data = req.body;
-    const filter = { isDeleted: false, _id: req?.params?.project_id };
+    const filter = {
+      isDeleted: false,
+      _id: req?.params?.id,
+    };
 
     const isProjectExist = await ProjectModel.findOne(filter);
 
