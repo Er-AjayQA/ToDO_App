@@ -10,6 +10,11 @@ router.post(
   authenticateToken,
   TaskController.createTask
 );
+router.post(
+  "/tasks/update_task/:task_id",
+  authenticateToken,
+  TaskController.updateTask
+);
 // router.post(
 //   "/:project_id/get_all_tasks",
 //   authenticateToken,

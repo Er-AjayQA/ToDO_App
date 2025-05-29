@@ -43,80 +43,41 @@ exports.createTask = async (req, res) => {
   }
 };
 
-// // Get All Tasks Controller
-// exports.getAllTasks = async (req, res) => {
-//   const data = req.body;
-//   const filter = { isDeleted: false };
+// Update Task Controller
+exports.updateTask = async (req, res) => {
+  const data = req.body;
+  const { task_id } = req?.params;
+  try {
+    const isTaskExist = await TaskModel.findOne({
+      _id: task_id,
+      isDeleted: false,
+    });
 
-//   try {
-//     let limit = parseInt(req?.body?.limit) || 10;
-//     let sort = data?.sort || "asc";
-//     if (limit < 1) limit = 10;
+    if (!isTaskExist) {
+      return res.status(201).json({
+        success: false,
+        message: "Task not found!!",
+      });
+    } else {
+      Object.keys(data).forEach((key) => {
+        if (key in isTaskExist && key !== "_id" && key !== "isDeleted") {
+          isTaskExist[key] = data[key];
+        }
+      });
 
-//     const projectSlug = req?.params?.project_slug;
+      await isTaskExist.save();
 
-//     if (data?.status) {
-//       filter.status = data?.status;
-//     }
-
-//     if (data?.priority) {
-//       filter.priority = data?.priority;
-//     }
-
-//     if (data?.Severity) {
-//       filter.Severity = data?.Severity;
-//     }
-
-//     if (data?.createdBy) {
-//       filter.createdBy = data?.createdBy;
-//     }
-
-//     const getProjectDetails = await ProjectModel.findOne({
-//       slug: projectSlug,
-//       isDeleted: false,
-//     });
-
-//     if (!getProjectDetails) {
-//       return res.status(201).json({
-//         success: false,
-//         message: "No Projects Found!!",
-//       });
-//     } else {
-//       filter.projectId = getProjectDetails._id;
-
-//       const getAllTasks = await TaskModel.find(filter)
-//         .populate([
-//           {
-//             path: "companyId",
-//             select: ["name", "slug"],
-//           },
-//           {
-//             path: "projectId",
-//             select: ["name", "slug"],
-//           },
-//         ])
-//         .limit(limit)
-//         .sort({ _id: sort });
-
-//       if (getAllTasks.length <= 0) {
-//         return res.status(201).json({
-//           success: false,
-//           message: "No Tasks Found!!",
-//         });
-//       } else {
-//         return res.status(201).json({
-//           success: true,
-//           message: "Data fetched successfully!!",
-//           records: getAllTasks.length,
-//           data: getAllTasks,
-//         });
-//       }
-//     }
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: "Something went wrong!!",
-//       errorMessage: error.message,
-//     });
-//   }
-// };
+      return res.status(201).json({
+        success: true,
+        message: "Task updated successfully!!",
+        data: isTaskExist,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong!!",
+      errorMessage: error.message,
+    });
+  }
+};
