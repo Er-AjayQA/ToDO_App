@@ -15,11 +15,11 @@ router.post(
   authenticateToken,
   TaskController.updateTask
 );
-// router.post(
-//   "/:project_id/get_all_tasks",
-//   authenticateToken,
-//   TaskController.getAllTasks
-// );
+router.post(
+  "/tasks/get_all_tasks",
+  authenticateToken,
+  TaskController.getAllTasks
+);
 
 // Export Router
 module.exports = router;

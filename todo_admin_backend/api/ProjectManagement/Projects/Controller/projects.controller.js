@@ -1,6 +1,6 @@
 // Imports & Configs
-const generateUniqueSlug = require("../../../../helpers/generateSlug");
 const ProjectModel = require("../Model/projects.model");
+const FolderModel = require("../../Folder/Model/folder.model");
 
 // Create Project Controller
 exports.createProject = async (req, res) => {
@@ -10,6 +10,7 @@ exports.createProject = async (req, res) => {
 
     const isProjectExist = await ProjectModel.findOne({
       name: data.name,
+      company_id: company_id,
       isDeleted: false,
     });
 
@@ -23,6 +24,12 @@ exports.createProject = async (req, res) => {
         ...data,
         company_id,
         create_date: new Date().toISOString(),
+      }).save();
+
+      await FolderModel({
+        name: "Backlog",
+        company_id,
+        project_id: newData._id,
       }).save();
 
       return res.status(201).json({
@@ -42,12 +49,12 @@ exports.createProject = async (req, res) => {
 
 // Get All Project Controller
 exports.getAllProject = async (req, res) => {
-  const data = req.body;
-  const filter = { isDeleted: false, company_id: req?.user?.company_id };
-  let limit = parseInt(data?.limit) || 10;
-  let sort = data?.sort === "desc" ? -1 : 1;
-
   try {
+    const data = req.body;
+    const filter = { isDeleted: false, company_id: req?.user?.company_id };
+    let limit = parseInt(data?.limit) || 10;
+    let sort = data?.sort === "desc" ? -1 : 1;
+
     if (limit < 1) limit = 10;
 
     if (data.name != "" && data.name != undefined) {
