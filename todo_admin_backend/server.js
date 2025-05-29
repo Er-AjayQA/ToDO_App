@@ -29,7 +29,7 @@ app.use("/api/v1/admin/company", companyRoutes);
 app.use("/api/v1/admin/users", userRoutes);
 app.use("/api/v1/admin/projects", projectRoutes);
 app.use("/api/v1/admin/", folderRoutes);
-app.use("/api/v1/admin/tasks", taskRoutes);
+app.use("/api/v1/admin/", taskRoutes);
 
 // Listening to Server
 app.listen(PORT, (err) => {

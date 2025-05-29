@@ -6,15 +6,15 @@ const authenticateToken = require("../../../../helpers/authentication");
 
 // Defines Routers
 router.post(
-  "/:project_slug/create_task",
+  "/:project_id/:folder_id/tasks/create_task",
   authenticateToken,
   TaskController.createTask
 );
-router.post(
-  "/:project_slug/get_all_tasks",
-  authenticateToken,
-  TaskController.getAllTasks
-);
+// router.post(
+//   "/:project_id/get_all_tasks",
+//   authenticateToken,
+//   TaskController.getAllTasks
+// );
 
 // Export Router
 module.exports = router;

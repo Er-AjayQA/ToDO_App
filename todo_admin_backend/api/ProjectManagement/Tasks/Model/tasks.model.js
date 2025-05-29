@@ -49,16 +49,14 @@ const tasksSchema = new mongoose.Schema(
     },
     create_on: {
       type: Date,
-      default: Date.now,
+      default: new Date().toISOString(),
     },
     start_date: {
-      type: Date,
-      default: Date.now,
+      type: String,
       default: null,
     },
     end_date: {
-      type: Date,
-      default: Date.now,
+      type: String,
       default: null,
     },
     isDeleted: {
