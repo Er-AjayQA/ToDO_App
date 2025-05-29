@@ -6,12 +6,11 @@ const TaskModel = require("../Model/tasks.model");
 // Create Task Controller
 exports.createTask = async (req, res) => {
   const data = req.body;
-  const paramData = req?.params;
-
+  const { project_id, folder_id } = req?.params;
   try {
     const isFolderExist = await FolderModel.findOne({
-      _id: req?.params?.folder_id,
-      project_id: req?.params?.project_id,
+      _id: folder_id,
+      project_id: project_id,
       isDeleted: false,
     });
 
@@ -24,7 +23,8 @@ exports.createTask = async (req, res) => {
       const newTask = await TaskModel({
         ...data,
         company_id: req?.user?.company_id,
-        project_id: req?.params?.project_id,
+        project_id: project_id,
+        folder_id: folder_id,
         created_by: req?.user?.id,
       }).save();
 
