@@ -1,12 +1,22 @@
 import { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { Link } from "react-router-dom";
+import { RegisterForm } from "./RegisterForm";
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [registerFormOpen, setRegisterFormOpen] = useState(false);
 
   const handleMobileMenu = () => {
     setIsMobileMenuOpen((prev) => !prev);
+  };
+
+  const handleRegisterFormOpen = () => {
+    setRegisterFormOpen(true);
+  };
+
+  const handleRegisterFormClose = () => {
+    setRegisterFormOpen(false);
   };
 
   return (
@@ -32,6 +42,7 @@ export const Header = () => {
               <button
                 type="button"
                 className="hidden md:block bg-purple-accent hover:bg-purple-hover text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center"
+                onClick={handleRegisterFormOpen}
               >
                 Register
               </button>
@@ -104,7 +115,6 @@ export const Header = () => {
         ) : (
           ""
         )}
-
         {/* Mobile Menu End Here */}
 
         {/* Main Menu Start Here */}
@@ -147,6 +157,13 @@ export const Header = () => {
         </div>
         {/* Main Menu End Here */}
       </header>
+
+      {/* Register Form Start */}
+      <RegisterForm
+        registerFormOpen={registerFormOpen}
+        handleRegisterFormClose={handleRegisterFormClose}
+      />
+      {/* Register Form End */}
     </>
   );
 };
