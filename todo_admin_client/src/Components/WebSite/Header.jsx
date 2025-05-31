@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { Link } from "react-router-dom";
-import { RegisterForm } from "./RegisterForm";
+import { CompanyRegisterForm } from "./CompanyRegisterForm";
 
 export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -30,7 +30,7 @@ export const Header = () => {
               className="flex items-center space-x-3 rtl:space-x-reverse"
             >
               <img
-                src="/Images/logo2.png"
+                src="/Images/logo5.png"
                 className="h-12 w-auto md:h-16"
                 alt="TaskTime Logo"
               />
@@ -159,7 +159,7 @@ export const Header = () => {
       </header>
 
       {/* Register Form Start */}
-      <RegisterForm
+      <CompanyRegisterForm
         registerFormOpen={registerFormOpen}
         handleRegisterFormClose={handleRegisterFormClose}
       />

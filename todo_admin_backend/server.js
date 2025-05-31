@@ -5,6 +5,8 @@ const DBConnection = require("./config/db.config");
 require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Handle Middlewares
 app.use(
@@ -14,8 +16,6 @@ app.use(
     allowedHeaders: ["Content-Type"],
   })
 );
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Routes Imports
 const companyRoutes = require("./api/CompanyManagement/Router/company.router");

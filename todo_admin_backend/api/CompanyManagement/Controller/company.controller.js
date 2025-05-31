@@ -1,13 +1,13 @@
 // Imports & Configs
 require("dotenv").config();
 const generateOTP = require("../../../helpers/generateOTP");
-const generateUniqueSlug = require("../../../helpers/generateSlug");
 const sendMail = require("../../../helpers/mailConfig");
 const CompanyModel = require("../Model/company.model");
 
 // Register Company Controller
 exports.registerCompany = async (req, res) => {
-  let data = req.body;
+  let data = req?.body;
+  console.log(data);
 
   try {
     let isCompanyExisting = await CompanyModel.findOne({
@@ -57,7 +57,7 @@ exports.registerCompany = async (req, res) => {
 
 // Verify Company Register OTP Controller
 exports.verifyOTP = async (req, res) => {
-  const { otp } = req.body;
+  const otp = Number(req.body.otp);
   const companyId = req.params.id;
 
   try {
@@ -91,7 +91,7 @@ exports.verifyOTP = async (req, res) => {
           message: "Invalid OTP!",
         });
       } else {
-        const invitationUrl = `http://localhost:5173/todo/invite/${isCompanyExisting.slug}/register`;
+        const invitationUrl = `http://localhost:5173/todo/invite/${isCompanyExisting._id}/register`;
         const updatedData = await CompanyModel.findByIdAndUpdate(
           companyId,
           {
