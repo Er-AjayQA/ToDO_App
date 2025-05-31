@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.home_banner_image {
+  background-image: url("/Images/Home_Page_Banner.png");
+  background-position: center;
+  background-repeat: no-repeat;
+}

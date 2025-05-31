@@ -113,7 +113,7 @@ export const Header = () => {
             <li>
               <a
                 href="#"
-                className="block py-2 px-3 text-white bg-purple-accent rounded-sm hover:text-purple-accent"
+                className="block py-2 px-3 text-white bg-purple-accent rounded-sm hover:bg-purple-dark hover:text-white"
                 aria-current="page"
               >
                 Home
@@ -122,7 +122,7 @@ export const Header = () => {
             <li>
               <a
                 href="#"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:text-purple-accent"
+                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-purple-dark hover:text-white"
               >
                 About
               </a>
@@ -130,7 +130,7 @@ export const Header = () => {
             <li>
               <a
                 href="#"
-                className="block py-2 px-3 text-gray-900 rounded-sm  hover:text-purple-accent"
+                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-purple-dark  hover:text-white"
               >
                 Services
               </a>
@@ -138,7 +138,7 @@ export const Header = () => {
             <li>
               <a
                 href="#"
-                className="block py-2 px-3 text-gray-900 rounded-sm  hover:text-purple-accent"
+                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-purple-dark  hover:text-white"
               >
                 Contact
               </a>
