@@ -7,7 +7,6 @@ const CompanyModel = require("../Model/company.model");
 // Register Company Controller
 exports.registerCompany = async (req, res) => {
   let data = req?.body;
-  console.log(data);
 
   try {
     let isCompanyExisting = await CompanyModel.findOne({
