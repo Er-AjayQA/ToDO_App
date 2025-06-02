@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { checkCompanyExistenceService } from "../../Services/RegisterUserServices";
 import { toast } from "react-toastify";
+import { LoginFormPage } from "./LoginFormPage";
+import { RegisterFormPage } from "./RegisterFormPage";
 
 export const RegisterPage = () => {
   const [isValidUrl, setIsValidUrl] = useState(false);
@@ -23,20 +25,27 @@ export const RegisterPage = () => {
     }
   };
 
+  const [alreadyAccount, setAlreadyAccount] = useState(false);
+
   useEffect(() => {
-    console.log("Run API once");
     checkCompanyExistence();
   }, [companyId]);
+
+  const handleAlreadyAccount = (status) => {
+    setAlreadyAccount(status);
+  };
 
   if (!isValidUrl) {
     return <div className="invalid-url-message">Invalid Link!!.</div>;
   }
 
   return (
-    <div className="register-page">
-      <h2>Register with Company</h2>
-      {/* Your actual registration form would go here */}
-      <div>Registration form for company ID: {companyId}</div>
+    <div className="relative w-screen h-screen">
+      {alreadyAccount ? (
+        <LoginFormPage handleAlreadyAccount={handleAlreadyAccount} />
+      ) : (
+        <RegisterFormPage handleAlreadyAccount={handleAlreadyAccount} />
+      )}
     </div>
   );
 };

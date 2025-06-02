@@ -19,6 +19,7 @@ createRoot(document.getElementById("root")).render(
       {/* Admin Routes */}
       <Route path="/task-management/:companyId/">
         <Route path="register" element={<RegisterPage />} />
+        <Route path="login" element={<RegisterPage />} />
         <Route element={<AdminLayout />}></Route>
       </Route>
     </Routes>
