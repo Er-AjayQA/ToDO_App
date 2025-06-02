@@ -15,10 +15,6 @@ export const Header = () => {
     setRegisterFormOpen(true);
   };
 
-  const handleRegisterFormClose = () => {
-    setRegisterFormOpen(false);
-  };
-
   return (
     <>
       <header className="relative">
@@ -161,7 +157,7 @@ export const Header = () => {
       {/* Register Form Start */}
       <CompanyRegisterForm
         registerFormOpen={registerFormOpen}
-        handleRegisterFormClose={handleRegisterFormClose}
+        setRegisterFormOpen={setRegisterFormOpen}
       />
       {/* Register Form End */}
     </>

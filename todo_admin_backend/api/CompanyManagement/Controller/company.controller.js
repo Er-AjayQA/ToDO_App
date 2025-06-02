@@ -90,7 +90,7 @@ exports.verifyOTP = async (req, res) => {
           message: "Invalid OTP!",
         });
       } else {
-        const invitationUrl = `http://localhost:5173/todo/invite/${isCompanyExisting._id}/register`;
+        const invitationUrl = `http://localhost:5173/todo/${isCompanyExisting._id}/login`;
         const updatedData = await CompanyModel.findByIdAndUpdate(
           companyId,
           {

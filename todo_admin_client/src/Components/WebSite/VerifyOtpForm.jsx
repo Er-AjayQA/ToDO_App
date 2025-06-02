@@ -1,10 +1,8 @@
-import { IoCloseSharp } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import { verifyOtpService } from "../../Services/RegisterServices";
 import { toast } from "react-toastify";
 
 export const VerifyOTPForm = ({
-  registerFormOpen,
   handleRegisterFormClose,
   setOtpVerified,
   companyId,
@@ -28,6 +26,8 @@ export const VerifyOTPForm = ({
     if (response.success) {
       reset();
       setOtpVerified(true);
+      handleRegisterFormClose();
+      toast.success("OTP verified: Registration successful!!");
     } else {
       toast.error(response.message);
     }
@@ -58,7 +58,9 @@ export const VerifyOTPForm = ({
               required: "OTP is required",
             })}
           />
-          {errors.otp && <p className="text-red-500">{errors.otp.message}</p>}
+          {errors.otp && (
+            <p className="text-[12px] text-red-500">{errors.otp.message}</p>
+          )}
         </div>
         <div className="mb-4 text-center">
           <button

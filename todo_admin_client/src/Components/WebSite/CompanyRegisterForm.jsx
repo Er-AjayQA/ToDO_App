@@ -1,17 +1,21 @@
 import { IoCloseSharp } from "react-icons/io5";
-import { useForm } from "react-hook-form";
-import { registerCompanyService } from "../../Services/RegisterServices";
 import { useState } from "react";
 import { RegisterForm } from "./RegisterForm";
 import { VerifyOTPForm } from "./VerifyOtpForm";
 
 export const CompanyRegisterForm = ({
   registerFormOpen,
-  handleRegisterFormClose,
+  setRegisterFormOpen,
 }) => {
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
   const [companyId, setCompanyId] = useState(null);
+
+  const handleRegisterFormClose = () => {
+    setRegisterFormOpen(false);
+    setOtpVerified(false);
+    setOtpSent(false);
+  };
 
   return (
     <>
@@ -29,14 +33,19 @@ export const CompanyRegisterForm = ({
 
         {/* Form Start */}
         {!otpSent ? (
-          <RegisterForm setOtpSent={setOtpSent} setCompanyId={setCompanyId} />
-        ) : otpVerified ? (
-          <p>OTP Verified Successfully</p>
-        ) : (
-          <VerifyOTPForm
+          <RegisterForm
+            setOtpSent={setOtpSent}
+            setCompanyId={setCompanyId}
             setOtpVerified={setOtpVerified}
-            companyId={companyId}
           />
+        ) : !otpVerified ? (
+          <VerifyOTPForm
+            companyId={companyId}
+            handleRegisterFormClose={handleRegisterFormClose}
+            setOtpVerified={setOtpVerified}
+          />
+        ) : (
+          ""
         )}
 
         {/* Form End */}

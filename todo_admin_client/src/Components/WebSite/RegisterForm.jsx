@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { registerCompanyService } from "../../Services/RegisterServices";
 
-export const RegisterForm = ({ setCompanyId, setOtpSent }) => {
+export const RegisterForm = ({ setCompanyId, setOtpSent, setOtpVerified }) => {
   const {
     register,
     handleSubmit,
@@ -13,7 +13,6 @@ export const RegisterForm = ({ setCompanyId, setOtpSent }) => {
 
   // Handle Login Form Submit
   const onSubmit = async (formData) => {
-    // Create FormData object
     const data = new FormData();
     data.append("name", formData.name);
     data.append("email", formData.email);
@@ -23,6 +22,7 @@ export const RegisterForm = ({ setCompanyId, setOtpSent }) => {
       reset();
       setCompanyId(response.data._id);
       setOtpSent(true);
+      setOtpVerified(response.data.otpVerified);
       toast.success(response.message);
     } else if (
       !response.success &&
@@ -57,7 +57,9 @@ export const RegisterForm = ({ setCompanyId, setOtpSent }) => {
               required: "Company Name is required",
             })}
           />
-          {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="text-[12px] text-red-500">{errors.name.message}</p>
+          )}
         </div>
         <div className="mb-4">
           <label
@@ -76,7 +78,7 @@ export const RegisterForm = ({ setCompanyId, setOtpSent }) => {
               })}
             />
             {errors.email && (
-              <p className="text-red-500">{errors.email.message}</p>
+              <p className="text-[12px] text-red-500">{errors.email.message}</p>
             )}
           </div>
         </div>
