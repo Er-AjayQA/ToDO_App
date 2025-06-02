@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-import { registerCompanyService } from "../../Services/RegisterServices";
+import { registerCompanyService } from "../../Services/RegisterCompanyServices";
 
 export const RegisterForm = ({ setCompanyId, setOtpSent, setOtpVerified }) => {
   const {

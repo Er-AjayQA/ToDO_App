@@ -1,4 +1,4 @@
-import axiosInstance from "../Services/axiosInstance";
+import axiosInstance from "./axiosInstance";
 
 // Register Company Service
 export const registerCompanyService = async (formData) => {

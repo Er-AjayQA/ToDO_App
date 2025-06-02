@@ -18,6 +18,10 @@ router.post(
   CompanyController.getCompanyDetails
 );
 router.post("/get-companies-details/", CompanyController.getAllCompanies);
+router.get(
+  "/check_company_existence/:id",
+  CompanyController.checkCompanyExistence
+);
 
 // Export Router
 module.exports = router;

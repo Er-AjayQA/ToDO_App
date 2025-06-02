@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { verifyOtpService } from "../../Services/RegisterServices";
+import { verifyOtpService } from "../../Services/RegisterCompanyServices";
 import { toast } from "react-toastify";
 
 export const VerifyOTPForm = ({

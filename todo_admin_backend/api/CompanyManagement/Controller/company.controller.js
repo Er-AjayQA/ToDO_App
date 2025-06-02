@@ -139,7 +139,7 @@ exports.generateInvitationLink = async (req, res) => {
         to: data.email,
         subject: `Invitation for ${isCompanyExisting.name} ToDo Platform.`,
         body: `<div>
-        <p>You are invited to join the team.</p>
+        <p>You can login to portal by using the below link.</p>
         <span>Use the following link to register yourself: <a href=${invitationUrl}>Register</a></span>
         </div>`,
       };
@@ -203,6 +203,36 @@ exports.getCompanyDetails = async (req, res) => {
       return res.status(200).json({
         success: false,
         message: "No data found!!",
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        message: "Company details found successfully!!",
+        data: getData,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong!!",
+      errorMessage: error.message,
+    });
+  }
+};
+
+// Check Company Existence Controller
+exports.checkCompanyExistence = async (req, res) => {
+  try {
+    const { id } = req?.params;
+
+    let getData = await CompanyModel.findOne({
+      $and: [{ _id: id }, { isDeleted: false }, { isActive: true }],
+    });
+
+    if (!getData) {
+      return res.status(404).json({
+        success: false,
+        message: "Invalid Link!!",
       });
     } else {
       return res.status(200).json({
