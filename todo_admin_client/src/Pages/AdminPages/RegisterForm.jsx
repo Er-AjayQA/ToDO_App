@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { registerUserService } from "../../Services/RegisterUserServices";
+import { toast } from "react-toastify";
 
-export const RegisterForm = ({ handleTabChange, companyId }) => {
+export const RegisterForm = ({ companyId }) => {
   const [viewPassword, setViewPassword] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -20,12 +23,20 @@ export const RegisterForm = ({ handleTabChange, companyId }) => {
   };
 
   // Handle Login Form Submit
-  const onSubmit = async (data) => {
-    console.log(data);
+  const onSubmit = async (formData) => {
+    const response = await registerUserService(companyId, formData);
+
+    if (response.success) {
+      reset();
+      toast.success(response.message);
+      navigate(`/task-management/${companyId}/login`);
+    } else {
+      toast.error(response.message);
+    }
   };
 
   return (
-    <form className="" onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mb-4">
         <label
           htmlFor="firstName"
@@ -88,7 +99,7 @@ export const RegisterForm = ({ handleTabChange, companyId }) => {
 
       <div className="mb-4">
         <label
-          htmlFor="email"
+          htmlFor="role"
           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
         >
           Select Role
@@ -97,12 +108,11 @@ export const RegisterForm = ({ handleTabChange, companyId }) => {
           id="role"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-3"
           {...register("role")}
+          defaultValue="user"
         >
           <option value="admin">Admin</option>
           <option value="manager">Manager</option>
-          <option value="user" selected>
-            User
-          </option>
+          <option value="user">User</option>
         </select>
       </div>
 
@@ -142,10 +152,7 @@ export const RegisterForm = ({ handleTabChange, companyId }) => {
       </div>
 
       <div className="mb-4">
-        <Link
-          to={`/task-management/${companyId}/register`}
-          onClick={() => handleTabChange("login")}
-        >
+        <Link to={`/task-management/${companyId}/login`}>
           Already have an account?
         </Link>
       </div>

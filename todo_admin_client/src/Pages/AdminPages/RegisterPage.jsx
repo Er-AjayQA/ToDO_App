@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { checkCompanyExistenceService } from "../../Services/RegisterUserServices";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 
 export const RegisterPage = () => {
   const [isValidUrl, setIsValidUrl] = useState(false);
   const { companyId } = useParams();
+  const navigate = useNavigate();
 
   const checkCompanyExistence = async () => {
     try {
       let response = await checkCompanyExistenceService(companyId);
-      console.log(response);
 
       if (!response?.success) {
         toast.error("Invalid Url");
@@ -25,17 +25,17 @@ export const RegisterPage = () => {
     }
   };
 
-  const [alreadyAccount, setAlreadyAccount] = useState(false);
-  const [selectedRegisterTab, setSelectedRegisterTab] = useState(true);
+  // const [selectedRegisterTab, setSelectedRegisterTab] = useState(true);
+  const isRegisterPage = location.pathname.includes("/register");
 
-  // Handle Tab Change
-  const handleTabChange = async (tabType) => {
-    if (tabType === "register") {
-      setSelectedRegisterTab(true);
-    } else {
-      setSelectedRegisterTab(false);
-    }
-  };
+  // // Handle Tab Change
+  // const handleTabChange = async (tabType) => {
+  //   if (tabType === "register") {
+  //     setSelectedRegisterTab(true);
+  //   } else {
+  //     setSelectedRegisterTab(false);
+  //   }
+  // };
 
   useEffect(() => {
     checkCompanyExistence();
@@ -47,14 +47,14 @@ export const RegisterPage = () => {
 
   return (
     <div className="relative w-screen h-screen">
+      <ToastContainer autoClose={1000} />
       <div className="absolute top-[15%] start-[50%] translate-x-[-50%]  w-[25%] border-1 border-solid border-black shadow-md p-5 mx-auto">
         <div className="flex items-center justify-center mb-5">
           <Link to={`/task-management/${companyId}/register`}>
             <button
               className={`px-[30px] py-1 text-xl rounded-l-lg ${
-                selectedRegisterTab ? "bg-gray-300" : "bg-gray-100"
+                isRegisterPage ? "bg-gray-300" : "bg-gray-100"
               }`}
-              onClick={() => handleTabChange("register")}
             >
               Register
             </button>
@@ -63,21 +63,17 @@ export const RegisterPage = () => {
           <Link to={`/task-management/${companyId}/login`}>
             <button
               className={`px-[30px] py-1 text-xl rounded-r-lg ${
-                selectedRegisterTab ? "bg-gray-100" : "bg-gray-300"
+                !isRegisterPage ? "bg-gray-300" : "bg-gray-100"
               }`}
-              onClick={() => handleTabChange("login")}
             >
               Login
             </button>
           </Link>
         </div>
-        {!selectedRegisterTab ? (
-          <LoginForm handleTabChange={handleTabChange} companyId={companyId} />
+        {!isRegisterPage ? (
+          <LoginForm companyId={companyId} />
         ) : (
-          <RegisterForm
-            handleTabChange={handleTabChange}
-            companyId={companyId}
-          />
+          <RegisterForm companyId={companyId} />
         )}
       </div>
     </div>

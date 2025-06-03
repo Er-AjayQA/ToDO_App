@@ -37,6 +37,7 @@ exports.register = async (req, res) => {
     }
 
     let hashedPassword = await bcrypt.hash(data.password, salt);
+    data.avatar = data.firstName.slice(0, 1) + data.lastName.slice(0, 1);
 
     const registerUser = await UserModel({
       ...data,
@@ -91,6 +92,7 @@ exports.login = async (req, res) => {
           name: userExist.firstName + " " + userExist.lastName,
           email: userExist.email,
           company_id: userExist.company_id,
+          avatar: userExist.avatar,
         };
         const token = jwt.sign(userDetails, process.env.JWT_SECRET, {
           expiresIn: "1h",

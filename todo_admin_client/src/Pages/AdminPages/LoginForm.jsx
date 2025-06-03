@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { checkCompanyExistenceService } from "../../Services/RegisterUserServices";
-import { toast } from "react-toastify";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { userLoginService } from "../../Services/RegisterUserServices";
+import { toast } from "react-toastify";
 
-export const LoginForm = ({ handleTabChange, companyId }) => {
+export const LoginForm = ({ companyId }) => {
   const [viewPassword, setViewPassword] = useState(false);
+  const navigate = useNavigate();
 
   const {
     register,
@@ -22,8 +23,17 @@ export const LoginForm = ({ handleTabChange, companyId }) => {
   };
 
   // Handle Login Form Submit
-  const onSubmit = async (data) => {
-    console.log(data);
+  const onSubmit = async (formData) => {
+    const response = await userLoginService(formData);
+
+    if (response.success) {
+      reset();
+      navigate(`/task-management/${companyId}/`);
+      toast.success(response.message);
+      localStorage.setItem("authToken", response.token);
+    } else {
+      toast.error(response.message);
+    }
   };
 
   return (
@@ -84,10 +94,7 @@ export const LoginForm = ({ handleTabChange, companyId }) => {
       </div>
 
       <div className="mb-4">
-        <Link
-          to={`/task-management/${companyId}/login`}
-          onClick={() => handleTabChange("register")}
-        >
+        <Link to={`/task-management/${companyId}/register`}>
           Don't have an account?
         </Link>
       </div>
@@ -97,7 +104,7 @@ export const LoginForm = ({ handleTabChange, companyId }) => {
           type="submit"
           className="text-white bg-[#3e8ef7] hover:bg-[#589ffc] focus:ring-none focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mx-auto block"
         >
-          Register
+          Login
         </button>
       </div>
     </form>
