@@ -3,9 +3,8 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-export const RegisterForm = (handleAlreadyAccount) => {
+export const RegisterForm = ({ handleTabChange, companyId }) => {
   const [viewPassword, setViewPassword] = useState(false);
-  const [selectedRegisterTab, setSelectedRegisterTab] = useState(true);
 
   const {
     register,
@@ -26,161 +25,139 @@ export const RegisterForm = (handleAlreadyAccount) => {
   };
 
   return (
-    <div className="relative w-screen h-screen">
-      <div className="absolute top-[50%] start-[50%] translate-x-[-50%] translate-y-[-50%] w-[25%] border-1 border-solid border-black shadow-md p-5 mx-auto">
-        <div className="flex items-center justify-center">
-          <button
-            className={`px-[30px] py-1 text-xl rounded-l-lg ${
-              selectedRegisterTab ? "bg-gray-100" : "bg-gray-300"
-            }`}
-          >
-            Register
-          </button>
-          <button className="px-[30px] py-1 text-xl bg-gray-300 rounded-r-lg">
-            Login
-          </button>
-        </div>
-
-        <form className="" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <p className="text-center mb-5">Register User</p>
-          </div>
-          <div className="mb-4 basis-[50%]">
-            <label
-              htmlFor="firstName"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              FirstName
-            </label>
-            <input
-              type="text"
-              id="firstName"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              {...register("firstName", {
-                required: "FirstName is required",
-              })}
-            />
-            {errors.firstName && (
-              <p className="text-[12px] text-red-500">
-                {errors.firstName.message}
-              </p>
-            )}
-          </div>
-
-          <div className="mb-4 basis-[50%]">
-            <label
-              htmlFor="lastName"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              LastName
-            </label>
-            <input
-              type="text"
-              id="lastName"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              {...register("lastName", {
-                required: "LastName is required",
-              })}
-            />
-            {errors.lastName && (
-              <p className="text-[12px] text-red-500">
-                {errors.lastName.message}
-              </p>
-            )}
-          </div>
-
-          <div className="mb-4 basis-[50%]">
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              {...register("email", {
-                required: "Email is required",
-              })}
-            />
-            {errors.email && (
-              <p className="text-[12px] text-red-500">{errors.email.message}</p>
-            )}
-          </div>
-
-          <div className="mb-4 basis-[50%]">
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Select Role
-            </label>
-            <select
-              id="role"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-3"
-              {...register("role")}
-            >
-              <option value="admin">Admin</option>
-              <option value="manager">Manager</option>
-              <option value="user" selected>
-                User
-              </option>
-            </select>
-          </div>
-
-          <div className="mb-4 basis-[50%]">
-            <label
-              htmlFor="password"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Password
-            </label>
-            <div className="relative">
-              <input
-                type={viewPassword ? "text" : "password"}
-                id="password"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                {...register("password", {
-                  required: "Password is required",
-                })}
-              />
-              {errors.password && (
-                <p className="text-[12px] text-red-500">
-                  {errors.password.message}
-                </p>
-              )}
-              {viewPassword ? (
-                <FaEye
-                  className="absolute end-5 top-[50%] translate-y-[-50%] cursor-pointer"
-                  onClick={handlePasswordVisibility}
-                />
-              ) : (
-                <FaEyeSlash
-                  className="absolute end-5 top-[50%] translate-y-[-50%] cursor-pointer"
-                  onClick={handlePasswordVisibility}
-                />
-              )}
-            </div>
-          </div>
-
-          <Link
-            to={"/task-management/:companyId/login"}
-            onClick={() => handleAlreadyAccount(true)}
-          >
-            Already have an account?
-          </Link>
-
-          <div className="mb-4">
-            <button
-              type="submit"
-              className="text-white bg-[#3e8ef7] hover:bg-[#589ffc] focus:ring-none focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mx-auto block"
-            >
-              Register
-            </button>
-          </div>
-        </form>
+    <form className="" onSubmit={handleSubmit(onSubmit)}>
+      <div className="mb-4">
+        <label
+          htmlFor="firstName"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          FirstName
+        </label>
+        <input
+          type="text"
+          id="firstName"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          {...register("firstName", {
+            required: "FirstName is required",
+          })}
+        />
+        {errors.firstName && (
+          <p className="text-[12px] text-red-500">{errors.firstName.message}</p>
+        )}
       </div>
-    </div>
+
+      <div className="mb-4">
+        <label
+          htmlFor="lastName"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          LastName
+        </label>
+        <input
+          type="text"
+          id="lastName"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          {...register("lastName", {
+            required: "LastName is required",
+          })}
+        />
+        {errors.lastName && (
+          <p className="text-[12px] text-red-500">{errors.lastName.message}</p>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label
+          htmlFor="email"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          Email
+        </label>
+        <input
+          type="email"
+          id="email"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          {...register("email", {
+            required: "Email is required",
+          })}
+        />
+        {errors.email && (
+          <p className="text-[12px] text-red-500">{errors.email.message}</p>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label
+          htmlFor="email"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          Select Role
+        </label>
+        <select
+          id="role"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full p-3"
+          {...register("role")}
+        >
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="user" selected>
+            User
+          </option>
+        </select>
+      </div>
+
+      <div className="mb-4">
+        <label
+          htmlFor="password"
+          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          Password
+        </label>
+        <div className="relative">
+          <input
+            type={viewPassword ? "text" : "password"}
+            id="password"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            {...register("password", {
+              required: "Password is required",
+            })}
+          />
+          {errors.password && (
+            <p className="text-[12px] text-red-500">
+              {errors.password.message}
+            </p>
+          )}
+          {viewPassword ? (
+            <FaEye
+              className="absolute end-5 top-[50%] translate-y-[-50%] cursor-pointer"
+              onClick={handlePasswordVisibility}
+            />
+          ) : (
+            <FaEyeSlash
+              className="absolute end-5 top-[50%] translate-y-[-50%] cursor-pointer"
+              onClick={handlePasswordVisibility}
+            />
+          )}
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <Link
+          to={`/task-management/${companyId}/register`}
+          onClick={() => handleTabChange("login")}
+        >
+          Already have an account?
+        </Link>
+      </div>
+
+      <div className="mb-4">
+        <button
+          type="submit"
+          className="text-white bg-[#3e8ef7] hover:bg-[#589ffc] focus:ring-none focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mx-auto block"
+        >
+          Register
+        </button>
+      </div>
+    </form>
   );
 };
