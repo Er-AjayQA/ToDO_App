@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { checkCompanyExistenceService } from "../../Services/RegisterUserServices";
 import { toast } from "react-toastify";
-import { LoginFormPage } from "./LoginFormPage";
-import { RegisterFormPage } from "./RegisterFormPage";
+import { LoginForm } from "./LoginForm";
+import { RegisterForm } from "./RegisterForm";
 
 export const RegisterPage = () => {
   const [isValidUrl, setIsValidUrl] = useState(false);
@@ -42,9 +42,9 @@ export const RegisterPage = () => {
   return (
     <div className="relative w-screen h-screen">
       {alreadyAccount ? (
-        <LoginFormPage handleAlreadyAccount={handleAlreadyAccount} />
+        <LoginForm handleAlreadyAccount={handleAlreadyAccount} />
       ) : (
-        <RegisterFormPage handleAlreadyAccount={handleAlreadyAccount} />
+        <RegisterForm handleAlreadyAccount={handleAlreadyAccount} />
       )}
     </div>
   );

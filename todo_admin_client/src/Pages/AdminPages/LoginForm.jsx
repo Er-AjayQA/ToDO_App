@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-export const LoginFormPage = () => {
+export const LoginForm = () => {
   const [isValidUrl, setIsValidUrl] = useState(false);
   const { companyId } = useParams();
 
