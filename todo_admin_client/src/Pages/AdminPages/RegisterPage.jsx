@@ -8,7 +8,6 @@ import { RegisterForm } from "./RegisterForm";
 export const RegisterPage = () => {
   const [isValidUrl, setIsValidUrl] = useState(false);
   const { companyId } = useParams();
-  const navigate = useNavigate();
 
   const checkCompanyExistence = async () => {
     try {
@@ -25,17 +24,7 @@ export const RegisterPage = () => {
     }
   };
 
-  // const [selectedRegisterTab, setSelectedRegisterTab] = useState(true);
   const isRegisterPage = location.pathname.includes("/register");
-
-  // // Handle Tab Change
-  // const handleTabChange = async (tabType) => {
-  //   if (tabType === "register") {
-  //     setSelectedRegisterTab(true);
-  //   } else {
-  //     setSelectedRegisterTab(false);
-  //   }
-  // };
 
   useEffect(() => {
     checkCompanyExistence();
