@@ -5,18 +5,10 @@ import { Link } from "react-router-dom";
 export const Header = () => {
   const { user, logout } = useAuth();
   const [logoutMenuDisplay, setLogoutMenuDisplay] = useState(false);
-
-  const { dropdownRef } = useRef(null);
+  const dropdownRef = useRef(null);
 
   const handleLogout = () => {
     logout();
-  };
-
-  const handleShowLogoutMenu = () => {
-    setLogoutMenuDisplay(true);
-  };
-
-  const handleCloseLogoutMenu = () => {
     setLogoutMenuDisplay(false);
   };
 
@@ -32,32 +24,28 @@ export const Header = () => {
   }, []);
 
   return (
-    <>
-      <header className="sticky top-0 start-0 shadow-md">
-        <nav className="flex justify-between p-4 items-center">
-          <div className="">BreadCrumb</div>
-          <div className="relative">
-            <div
-              className="flex items-center gap-3"
-              onClick={handleShowLogoutMenu}
-              ref={dropdownRef}
-            >
-              <button className="p-2 font-bold bg-blue-accent rounded-[50%]">
-                {user.avatar}
-              </button>
-              <span className="block">{user.name}</span>
-            </div>
+    <header className="sticky top-0 start-0 shadow-md bg-white z-50">
+      <nav className="flex justify-between p-4 items-center">
+        <div className="">BreadCrumb</div>
+        <div className="relative" ref={dropdownRef}>
+          <div
+            className="flex items-center gap-3 cursor-pointer"
+            onClick={() => setLogoutMenuDisplay(!logoutMenuDisplay)}
+          >
+            <button className="p-2 font-bold bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center">
+              {user?.avatar ||
+                (user?.name ? user.name.charAt(0).toUpperCase() : "U")}
+            </button>
+            <span className="block">{user?.name || "User"}</span>
+          </div>
 
-            <div
-              className={`absolute top-100 end-0 w-[200px] ${
-                logoutMenuDisplay ? "block" : "hidden"
-              }`}
-            >
-              <ul className="py-2 bg-white shadow-md">
+          {logoutMenuDisplay && (
+            <div className="absolute top-full right-0 w-48 mt-2 bg-white rounded-md shadow-lg z-50">
+              <ul className="py-1">
                 <li>
                   <Link
-                    to=""
-                    className="hover:bg-gray-100 block p-2"
+                    to="#"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                     onClick={handleLogout}
                   >
                     Logout
@@ -65,9 +53,9 @@ export const Header = () => {
                 </li>
               </ul>
             </div>
-          </div>
-        </nav>
-      </header>
-    </>
+          )}
+        </div>
+      </nav>
+    </header>
   );
 };
