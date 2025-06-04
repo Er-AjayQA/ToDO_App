@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { checkCompanyExistenceService } from "../../Services/RegisterUserServices";
 import { toast, ToastContainer } from "react-toastify";
-import { LoginForm } from "./LoginForm";
-import { RegisterForm } from "./RegisterForm";
+import { LoginForm } from "../../Components/AdminPanel/LoginForm";
+import { RegisterForm } from "../../Components/AdminPanel/RegisterForm";
 
 export const RegisterPage = () => {
   const [isValidUrl, setIsValidUrl] = useState(false);

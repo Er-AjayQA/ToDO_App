@@ -27,7 +27,6 @@ export const LoginForm = ({ companyId }) => {
   // Handle Login Form Submit
   const onSubmit = async (formData) => {
     const response = await userLoginService(formData);
-    console.log(response);
 
     if (response.success) {
       reset();
