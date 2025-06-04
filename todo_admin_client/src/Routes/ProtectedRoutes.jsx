@@ -1,11 +1,22 @@
 // ProtectedRoute.js
-import { Navigate, Outlet } from "react-router-dom";
-import { useContext } from "react";
+import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
+import { useAuth } from "../ContextAPI/AuthContext";
 
 const ProtectedRoute = () => {
-  const { token } = useContext();
+  const { companyId: authCompanyId, isAuthenticated, logout } = useAuth();
+  const { companyId: urlCompanyId } = useParams();
+  const location = useLocation();
 
-  return token ? <Outlet /> : <Navigate to="/login" />;
+  if (!isAuthenticated()) {
+    return <Navigate to={`/task-management/${urlCompanyId}/login`} replace />;
+  }
+
+  if (authCompanyId !== urlCompanyId) {
+    logout();
+    return <Navigate to={`/task-management/${urlCompanyId}/login`} replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

@@ -4,9 +4,11 @@ import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { userLoginService } from "../../Services/RegisterUserServices";
 import { toast } from "react-toastify";
+import { useAuth } from "../../ContextAPI/AuthContext";
 
 export const LoginForm = ({ companyId }) => {
   const [viewPassword, setViewPassword] = useState(false);
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const {
@@ -25,12 +27,14 @@ export const LoginForm = ({ companyId }) => {
   // Handle Login Form Submit
   const onSubmit = async (formData) => {
     const response = await userLoginService(formData);
+    console.log(response);
 
     if (response.success) {
       reset();
-      navigate(`/task-management/${companyId}/`);
       toast.success(response.message);
+      login(companyId, response.userDetails, response.token);
       localStorage.setItem("authToken", response.token);
+      navigate(`/task-management/${companyId}/`);
     } else {
       toast.error(response.message);
     }

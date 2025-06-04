@@ -6,26 +6,32 @@ import { Home } from "./Pages/WebPages/Home.jsx";
 import { HomePage } from "./Pages/AdminPages/Home.jsx";
 import { AdminLayout } from "./Layout/AdminLayout.jsx";
 import { RegisterPage } from "./Pages/AdminPages/RegisterPage.jsx";
+import { AuthProvider } from "./ContextAPI/AuthContext.jsx";
+import ProtectedRoute from "./Routes/ProtectedRoutes.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <Routes>
-      {/* Web Routes */}
-      <Route path="/">
-        <Route element={<WebLayout />}>
-          <Route path="home" element={<Home />} />
+    <AuthProvider>
+      <Routes>
+        {/* Web Routes */}
+        <Route path="/">
+          <Route element={<WebLayout />}>
+            <Route path="home" element={<Home />} />
+          </Route>
         </Route>
-      </Route>
 
-      {/* Admin Routes */}
-      <Route path="/task-management/:companyId/">
-        <Route path="register" element={<RegisterPage />} />
-        <Route path="login" element={<RegisterPage />} />
+        {/* Admin Routes */}
+        <Route path="/task-management/:companyId/">
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="login" element={<RegisterPage />} />
 
-        <Route element={<AdminLayout />}>
-          <Route index element={<HomePage />} />{" "}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route index element={<HomePage />} />{" "}
+            </Route>
+          </Route>
         </Route>
-      </Route>
-    </Routes>
+      </Routes>
+    </AuthProvider>
   </BrowserRouter>
 );
