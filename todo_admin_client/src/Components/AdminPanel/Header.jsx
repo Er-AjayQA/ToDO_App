@@ -24,8 +24,8 @@ export const AdminHeader = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 start-0 shadow-md bg-white z-50">
-      <nav className="flex justify-between px-8 py-4 items-center">
+    <header className="sticky top-0 start-0 border-b border-b-solid border-b-gray-300 bg-white z-50">
+      <nav className="flex justify-between px-8 py-[8px] items-center">
         <div className="">BreadCrumb</div>
         <div className="relative" ref={dropdownRef}>
           <div
