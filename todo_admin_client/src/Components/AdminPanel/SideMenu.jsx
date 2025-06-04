@@ -21,7 +21,7 @@ export const SideMenu = () => {
         </div>
         <div className="flex items-center justify-center mb-2">
           <Link
-            className={`text-white text-xl p-3 rounded ${
+            className={`text-white text-xl p-3 rounded hover:bg-blue-dark ${
               isActive ? "bg-blue-dark" : ""
             }`}
           >
@@ -29,7 +29,7 @@ export const SideMenu = () => {
           </Link>
         </div>
         <div className="flex items-center justify-center mb-2">
-          <Link className="text-white text-xl p-4">
+          <Link className="text-white text-xl p-3 rounded hover:bg-blue-dark">
             <FaBriefcase />
           </Link>
         </div>

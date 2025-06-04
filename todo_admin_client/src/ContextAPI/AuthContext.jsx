@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.getItem("companyId") || null
   );
   const [user, setUser] = useState(
-    JSON.stringify(localStorage.getItem("userDetails")) || null
+    JSON.parse(localStorage.getItem("userDetails")) || null
   );
   const [token, setToken] = useState(localStorage.getItem("authToken") || null);
 

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../ContextAPI/AuthContext";
 import { Link } from "react-router-dom";
 
-export const Header = () => {
+export const AdminHeader = () => {
   const { user, logout } = useAuth();
   const [logoutMenuDisplay, setLogoutMenuDisplay] = useState(false);
   const dropdownRef = useRef(null);
@@ -25,7 +25,7 @@ export const Header = () => {
 
   return (
     <header className="sticky top-0 start-0 shadow-md bg-white z-50">
-      <nav className="flex justify-between p-4 items-center">
+      <nav className="flex justify-between px-8 py-4 items-center">
         <div className="">BreadCrumb</div>
         <div className="relative" ref={dropdownRef}>
           <div
