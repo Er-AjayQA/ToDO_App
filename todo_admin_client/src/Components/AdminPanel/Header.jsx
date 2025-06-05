@@ -46,6 +46,23 @@ export const AdminHeader = () => {
                   <Link
                     to="#"
                     className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                  >
+                    All Projects
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="#"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                    onClick={handleLogout}
+                  >
+                    My Tasks
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="#"
+                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                     onClick={handleLogout}
                   >
                     Logout

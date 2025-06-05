@@ -3,9 +3,13 @@ import { FaHome, FaBriefcase } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../ContextAPI/AuthContext";
 
-export const SideMenu = () => {
-  const [isActive, setIsActive] = useState(true);
+export const SideMenu = ({ menuList }) => {
+  const [isActive, setIsActive] = useState("Home");
   const { companyId } = useAuth();
+
+  const handleMenuActive = (name) => {
+    setIsActive(name);
+  };
 
   return (
     <>
@@ -19,20 +23,23 @@ export const SideMenu = () => {
             />
           </Link>
         </div>
-        <div className="flex items-center justify-center mb-2">
-          <Link
-            className={`text-white text-xl p-3 rounded hover:bg-blue-dark ${
-              isActive ? "bg-blue-dark" : ""
-            }`}
-          >
-            <FaHome />
-          </Link>
-        </div>
-        <div className="flex items-center justify-center mb-2">
-          <Link className="text-white text-xl p-3 rounded hover:bg-blue-dark">
-            <FaBriefcase />
-          </Link>
-        </div>
+        {menuList.map((menu) => {
+          return (
+            <div
+              key={menu.id}
+              className="flex items-center justify-center mb-2"
+            >
+              <Link
+                className={`text-white text-xl p-3 rounded hover:bg-blue-dark ${
+                  isActive === menu.name ? "bg-blue-dark" : ""
+                }`}
+                onClick={() => handleMenuActive(menu.name)}
+              >
+                {menu.icon}
+              </Link>
+            </div>
+          );
+        })}
       </div>
     </>
   );
