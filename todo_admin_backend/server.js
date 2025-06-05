@@ -13,7 +13,7 @@ app.use(
   cors({
     origin: process.env.CLIENT_URL,
     methods: ["GET", "POST", "DELETE", "PUT"],
-    allowedHeaders: ["Content-Type"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -27,7 +27,7 @@ const taskRoutes = require("./api/ProjectManagement/Tasks/Router/tasks.router");
 // Routes Middleware
 app.use("/api/v1/admin/company", companyRoutes);
 app.use("/api/v1/admin/users", userRoutes);
-app.use("/api/v1/admin/:company_id/projects", projectRoutes);
+app.use("/api/v1/admin", projectRoutes);
 app.use("/api/v1/admin/", folderRoutes);
 app.use("/api/v1/admin/", taskRoutes);
 

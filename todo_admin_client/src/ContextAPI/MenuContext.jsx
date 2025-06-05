@@ -6,11 +6,11 @@ const MenuContext = createContext();
 
 export const MenuProvider = ({ children }) => {
   const [allProjects, setAllProjects] = useState([]);
-  const { companyId } = useAuth();
+  const { token, companyId } = useAuth();
 
   const getAllProjectsList = async () => {
     let formData = {};
-    let response = await getAllProjectsService(companyId, formData);
+    let response = await getAllProjectsService(companyId, formData, token);
 
     setAllProjects(response.data);
   };
