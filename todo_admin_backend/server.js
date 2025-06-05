@@ -27,7 +27,7 @@ const taskRoutes = require("./api/ProjectManagement/Tasks/Router/tasks.router");
 // Routes Middleware
 app.use("/api/v1/admin/company", companyRoutes);
 app.use("/api/v1/admin/users", userRoutes);
-app.use("/api/v1/admin/projects", projectRoutes);
+app.use("/api/v1/admin/:company_id/projects", projectRoutes);
 app.use("/api/v1/admin/", folderRoutes);
 app.use("/api/v1/admin/", taskRoutes);
 

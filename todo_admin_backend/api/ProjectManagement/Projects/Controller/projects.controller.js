@@ -51,7 +51,7 @@ exports.createProject = async (req, res) => {
 exports.getAllProject = async (req, res) => {
   try {
     const data = req.body;
-    const filter = { isDeleted: false, company_id: req?.user?.company_id };
+    const filter = { isDeleted: false, company_id: req?.params?.company_id };
     let limit = parseInt(data?.limit) || 10;
     let sort = data?.sort === "desc" ? -1 : 1;
 

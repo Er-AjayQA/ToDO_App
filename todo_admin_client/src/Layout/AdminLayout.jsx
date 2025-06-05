@@ -13,6 +13,7 @@ import {
 import { FaHome, FaBriefcase } from "react-icons/fa";
 
 import { useState } from "react";
+import { useMenu } from "../ContextAPI/MenuContext";
 
 export const AdminLayout = () => {
   const [subMenuOpen, setSubMenuOpen] = useState(false);
@@ -33,6 +34,9 @@ export const AdminLayout = () => {
       subMenu: [],
     },
   ]);
+  const { allProjects } = useMenu();
+
+  console.log(allProjects);
 
   return (
     <>
